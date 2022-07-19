@@ -14,8 +14,6 @@ class Lead extends Model {
         'createdAt'
     ];
 
-    private $values;
-
     public function __construct($import) {
         $this->values = $import;
     }
@@ -72,6 +70,26 @@ class Lead extends Model {
      */
     public static function getLeadFieldByName($fieldApiName) {
         return Client::send('GET', 'leads/schema/fields/' . $fieldApiName . '.json');
+    }
+
+    /**
+     * getLeadFields
+     * 
+     * Retrieves metadata for all lead fields in the target instance. 
+     * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
+     * 
+     * @return array \WorldNewsGroup\Marketo\Model\LeadField
+     */
+    public static function getLeadFields($batchSize = 300, $nextPageToken = null) {
+        if( $batchSize > 300 ) throw new Exception("Batch size cannod exceed 300 for getLeadFields");
+
+        $params['query'] = ['batchSize'=>$batchSize];
+
+        if( !is_null($nextPageToken) ) {
+            $params['query']['nextPageToken'] = $nextPageToken;
+        }
+
+        return Client::send('GET', 'leads/schema/fields.json', $params);
     }
 
     public static function updateLeadField($fieldApiName, $updateLeadFieldRequest = []) {

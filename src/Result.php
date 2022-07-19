@@ -20,7 +20,18 @@ class Result {
             }
         }
 
-        return new Lead($this->response);
+        return new Lead($this->response['result']);
     }
 
+    public function getNextPageToken() {
+        return $this->response['nextPageToken'];
+    }
+
+    public function getMoreResult() {
+        return $this->response['moreResult'];
+    }
+
+    public function getSuccess() {
+        return $this->response['success'];
+    }
 }

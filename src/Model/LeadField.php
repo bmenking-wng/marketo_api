@@ -6,12 +6,16 @@ use WorldNewsGroup\Marketo\Client;
 
 class LeadField extends Model {
     public static $fields = [
-        'id',
-        'firstName',
-        'lastName',
-        'email',
-        'updatedAt',
-        'createdAt'
+        'displayName',
+        'name',
+        'description',
+        'dataType',
+        'length',
+        'isHidden',
+        'isHtmlEncodingInEmail',
+        'isSensitive',
+        'isCustom',
+        'isApiCreated'
     ];
 
     private $values;

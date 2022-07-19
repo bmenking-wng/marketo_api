@@ -5,6 +5,11 @@ namespace WorldNewsGroup\Marketo;
 use WorldNewsGroup\Marketo\Exception\ErrorException;
 
 class Client {
+    /**
+     * send
+     * 
+     * @return ListResult | Result
+     */
     public static function send($method, $path, $params = [], $env = null, $headers = []) {
         if( is_null($env) ) {
             $env = Environment::currentEnvironment();
@@ -13,30 +18,16 @@ class Client {
         if( is_null($env) ) {
             throw new \Exception('The client API has not been configured properly.  Please call Environment::configure() before making calls.');
         }
-        
-        $opts = [
-            'allow_redirects'=>true,
-            'http_errors'=>false
-        ];
-
-        if( $method == 'GET' ) {
-            if( count($params) > 0 ) {
-                $opts['query'] = \http_build_query($params);
-            }
-        }
-        else if( $method == 'POST' ) {
-            $opts['form_params'] = \http_build_query($params);
-        }
-        else {
-            throw new \Exception("Invalid http method $method");
-        }
 
         $token = self::getToken($env);
 
         $query = [];
         if( isset($params['query']) ) {
             foreach($params['query'] as $key=>$vals ) {
-                if( count($vals) > 0 ) {
+                if( is_array($vals) ) {
+                    $query[$key] = \http_build_query($vals);
+                }
+                else {
                     $query[$key] = $vals;
                 }
             }
@@ -61,7 +52,12 @@ class Client {
         $json = json_decode($rawResponse, true);
 
         if( $json['success'] ) {
-            return new Result($rawResponse);
+            if( count($json['result']) > 1 ) {
+                return new ListResult($json);
+            }
+            else {
+                return new Result($json);
+            }
         }
         else if( !$json['success'] && isset($json['errors']) ) {
             throw new ErrorException($json['errors']);

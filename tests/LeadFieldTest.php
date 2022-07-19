@@ -15,11 +15,19 @@ final class LeadFieldTest extends TestCase {
     /**
      * @covers \LeadField
      */
-    public function testGetLeadFieldByName() {
-        $result = Lead::getLeadFieldByName('createdAt');
+    public function testGetLeadFields() {
+        $result = Lead::getLeadFields(2);
 
-        print_r($result);
+        $fields = $result->fields();
 
-        $this->assetTrue(true);
+        $this->assertCount(2, $fields, "Asked for 2 fields, returned " . count($fields) . ".  This may not be a problem if no fields exist in database");
+
+        $this->assertTrue($result->getMoreResult() );
+
+        if( $result->getMoreResult() ) {
+            $result = Lead::getLeadFields(2, $result->getNextPageToken());
+
+            $this->assertCount(2, $fields, "Asked for 2 fields, returned " . count($fields) . ".  This may not be a problem if no fields exist in database");
+        }
     }
 }
