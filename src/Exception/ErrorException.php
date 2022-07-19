@@ -6,7 +6,7 @@ class ErrorException extends ApiException {
     private $errors;
 
     public function __construct($errors) {
-        parent::__construct("The API request returned an error.");
+        parent::__construct("The API request returned an error. " . print_r($errors, true));
 
         $this->errors = $errors;
     }

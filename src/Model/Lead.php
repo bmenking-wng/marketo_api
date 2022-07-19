@@ -16,7 +16,7 @@ class Lead extends Model {
 
     private $values;
 
-    public function __constuct($import) {
+    public function __construct($import) {
         $this->values = $import;
     }
 
@@ -40,18 +40,47 @@ class Lead extends Model {
         return Client::send('GET', "leads.json", ['query'=>$query]);
     }
 
+    /**
+     * describeLead
+     * 
+     * Returns metadata about lead objects in the target instance, including a list of all fields available for interaction via the APIs.
+     * Note: This endpoint has been superceded. Use Describe Lead2 endpoint instead.
+     * 
+     * @return \WorldNewsGroup\Marketo\Model\Lead | null
+     */
     public static function describeLead() {
         return Client::send('GET', 'leads/describe.json');
     }
 
+    /**
+     * describeLead2
+     * 
+     * Returns list of searchable fields on lead objects in the target instance.
+     * 
+     * @return \WorldNewsGroup\Marketo\Model\Lead | null
+     */
     public static function describeLead2() {
         return Client::send('GET', 'leads/describe2.json');
     }
 
-    public function __get($name) {
-        if( isset($this->values[$name])) 
-            return $this->values[$name];
-        else
-            return null;
+    /**
+     * getLeadFieldByName
+     * 
+     * Retrieves metadata for single lead field.
+     * 
+     * @return \WOrldNewsGroup\Marketo\Model\LeadField | null
+     */
+    public static function getLeadFieldByName($fieldApiName) {
+        return Client::send('GET', 'leads/schema/fields/' . $fieldApiName . '.json');
+    }
+
+    public static function updateLeadField($fieldApiName, $updateLeadFieldRequest = []) {
+        return Client::send('POST', 'leads/schema/fields/' . $fieldApiName . '.json', ['body'=>['updateLeadFieldRequest']]);
+    }
+
+    public static function deleteLeads($deleteLeadRequest = []) {
+        if( is_empty($deleteLeadRequest) ) return null;
+
+        return Client::send('POST', 'leads/delete.json', ['body'=>['deleteLeadRequest'=>$leadIds]]);
     }
 }

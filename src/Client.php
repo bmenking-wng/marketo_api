@@ -34,9 +34,11 @@ class Client {
         $token = self::getToken($env);
 
         $query = [];
-        foreach($params['query'] as $key=>$vals ) {
-            if( count($vals) > 0 ) {
-                $query[$key] = $vals;
+        if( isset($params['query']) ) {
+            foreach($params['query'] as $key=>$vals ) {
+                if( count($vals) > 0 ) {
+                    $query[$key] = $vals;
+                }
             }
         }
 
@@ -48,9 +50,9 @@ class Client {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        if( count($params['body']) > 0 ) {
+        if( isset($params['body']) && count($params['body']) > 0 ) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, \http_build_query($params['body']));
         }
 
         $rawResponse = curl_exec($ch);
