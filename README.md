@@ -40,8 +40,8 @@ $ composer update
 ## Usage/Quickstart
 
 ```php
-use WorldNewsGroup\Market\Environment;
-use WorldNewsGroup\Market\Model\Lead;
+use WorldNewsGroup\Marketo\Environment;
+use WorldNewsGroup\Marketo\Model\Lead;
 
 Environment::configure('client_id', 'client_secret', 'munchkin_id');
 
