@@ -101,7 +101,7 @@ class Lead extends Model {
      * @return array \WorldNewsGroup\Marketo\Model\LeadPartition
      */
     public static function getLeadPartitions() {
-        return Client::send('GET', 'leads/partition.json');
+        return Client::send('GET', 'leads/partitions.json');
     }
 
     public static function updateLeadField($fieldApiName, $updateLeadFieldRequest = []) {

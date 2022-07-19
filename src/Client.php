@@ -52,12 +52,7 @@ class Client {
         $json = json_decode($rawResponse, true);
 
         if( $json['success'] ) {
-            if( count($json['result']) > 1 ) {
-                return new ListResult($json);
-            }
-            else {
-                return new Result($json);
-            }
+            return new Result($json);
         }
         else if( !$json['success'] && isset($json['errors']) ) {
             throw new ErrorException($json['errors']);
