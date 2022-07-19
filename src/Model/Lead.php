@@ -92,6 +92,18 @@ class Lead extends Model {
         return Client::send('GET', 'leads/schema/fields.json', $params);
     }
 
+    /**
+     * getLeadParitions
+     * 
+     * Returns a list of available partitions in the target instance. 
+     * Required Permissions: Read-Only Lead, Read-Write Lead
+     * 
+     * @return array \WorldNewsGroup\Marketo\Model\LeadPartition
+     */
+    public static function getLeadPartitions() {
+        return Client::send('GET', 'leads/partition.json');
+    }
+
     public static function updateLeadField($fieldApiName, $updateLeadFieldRequest = []) {
         return Client::send('POST', 'leads/schema/fields/' . $fieldApiName . '.json', ['body'=>['updateLeadFieldRequest']]);
     }

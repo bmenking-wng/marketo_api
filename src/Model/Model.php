@@ -4,6 +4,7 @@ namespace WorldNewsGroup\Marketo\Model;
 
 class Model {
     public static $fields;
+    
     private $values;
 
     public function __get($name) {
