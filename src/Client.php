@@ -40,11 +40,14 @@ class Client {
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
-        if( isset($params['body']) && count($params['body']) > 0 ) {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, \http_build_query($params['body']));
+        if( isset($params['body']) && count($params['body']) > 0 && $method == 'POST') {
+            $headers[] = "Content-Type: application/json";
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params['body']));
         }
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         $rawResponse = curl_exec($ch);
         curl_close($ch);

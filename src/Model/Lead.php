@@ -104,13 +104,57 @@ class Lead extends Model {
         return Client::send('GET', 'leads/partitions.json');
     }
 
-    public static function updateLeadField($fieldApiName, $updateLeadFieldRequest = []) {
-        return Client::send('POST', 'leads/schema/fields/' . $fieldApiName . '.json', ['body'=>['updateLeadFieldRequest']]);
+    /**
+     * pushLeadToMarketo
+     * 
+     * Upserts a lead and generates a Push Lead to Marketo activity. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @return boolean
+     */
+    public static function pushLeadToMarketo(Lead $lead, $program_name) {
+        $params = [
+            'body'=>[
+                'lookupField'=>'email',
+                'action'=>'createOrUpdate',
+                'input'=>[
+                    [
+                        'firstName'=>$lead->firstName,
+                        'lastName'=>$lead->lastName,
+                        'email'=>$lead->email     
+                    ]           
+                ]
+            ]
+        ];
+    
+        return Client::send('POST', 'leads/push.json', $params);
     }
 
-    public static function deleteLeads($deleteLeadRequest = []) {
-        if( is_empty($deleteLeadRequest) ) return null;
+    /**
+     * syncLeads
+     * 
+     * Syncs a list of leads to the target instance. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @return something
+     */
+    public static function syncLeads(Array $leads) {
+        return Client::send('POST', 'leads.json', ['body'=>['input'=>$leads]]);
+    }
 
-        return Client::send('POST', 'leads/delete.json', ['body'=>['deleteLeadRequest'=>$leadIds]]);
+    /**
+     * deleteLeads
+     * 
+     * Delete a list of leads from the destination instance. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @return something
+     */
+    public static function deleteLeads(Array $leads) {
+        return Client::send('POST', 'leads/delete.json', ['body'=>['input'=>$leads]]);
+    }
+
+    public static function updateLeadField($fieldApiName, $updateLeadFieldRequest = []) {
+        return Client::send('POST', 'leads/schema/fields/' . $fieldApiName . '.json', ['body'=>['updateLeadFieldRequest']]);
     }
 }

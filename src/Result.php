@@ -109,4 +109,15 @@ class Result {
     public function getSuccess() {
         return ($this->response['success'] == 1);
     }
+
+    /**
+     * getResults
+     * 
+     * Get unprocessed results from request
+     * 
+     * @return array
+     */
+    public function getResults() {
+        return $this->response['result'];
+    }
 }
