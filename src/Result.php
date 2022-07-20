@@ -7,8 +7,13 @@ use WorldNewsGroup\Marketo\Model\LeadPartition;
 use WorldNewsGroup\Marketo\Model\LeadField;
 
 class Result {
-    private $response;
+    private Array $response;
 
+    /**
+     * @internal
+     * 
+     * @param   mixed[]     $response
+     */
     public function __construct($response) {
         $this->response = $response;
     }
@@ -62,7 +67,7 @@ class Result {
      * 
      * Get unprocessed results from request
      * 
-     * @return array
+     * @return mixed[]
      */
     public function getResults() {
         return $this->response['result'];

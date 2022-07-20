@@ -5,20 +5,20 @@ namespace WorldNewsGroup\Marketo;
 class Environment {
 
     /** @internal */
-    private static $myself;
+    private static Environment $myself;
     /** @internal */
-    private $client_id;
+    private String $client_id;
     /** @internal */
-    private $client_secret;
+    private String $client_secret;
     /** @internal */
-    private $munchkin_id;
+    private String $munchkin_id;
     /** @internal */
-    private $endPoint;
+    private String $endPoint;
 
     /**
      * @internal
      */
-    public function __construct($client_id, $client_secret, $munchkin_id) {
+    public function __construct(String $client_id, String $client_secret, String $munchkin_id) {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         $this->munchkin_id = $munchkin_id;
@@ -26,7 +26,7 @@ class Environment {
         $this->endPoint = "https://" . $munchkin_id . ".mktorest.com/rest/v1/";
     }
 
-    public static function configure($client_id, $client_secret, $munchkin_id) {
+    public static function configure(String $client_id, String $client_secret, String $munchkin_id) {
         self::$myself = new self($client_id, $client_secret, $munchkin_id);
     }
 

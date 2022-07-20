@@ -102,87 +102,304 @@ class Lead extends Model {
     /**
      * Returns metadata about lead objects in the target instance, including a list of all fields available for interaction via the APIs.
      * Note: This endpoint has been superceded. Use Describe Lead2 endpoint instead.
+     * @deprecated
      * 
-     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
-     * @return \WorldNewsGroup\Marketo\Model\Lead | null | \WorldNewsGroup\Marketo\Exception\ErrorException
+     * @return array | null
      */
     public static function describeLead() {
-        return Client::send('GET', 'leads/describe.json');
+        return LeadAttribute::manufacture(Client::send('GET', 'leads/describe.json'));
     }
 
     /**
      * Returns list of searchable fields on lead objects in the target instance.
      * 
-     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
-     * @return \WorldNewsGroup\Marketo\Model\Lead | null | \WorldNewsGroup\Marketo\Exception\ErrorException
+     * @return array | null
      */
     public static function describeLead2() {
-        return Client::send('GET', 'leads/describe2.json');
+        return LeadAttribute2::manufacture(Client::send('GET', 'leads/describe2.json'));
     }
 
     /**
-     * getLeadFieldByName
-     * 
      * Retrieves metadata for single lead field.
-     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
-     * @return \WorldNewsGroup\Marketo\Model\LeadField | null | \WorldNewsGroup\Marketo\Exception\ErrorException
+     * 
+     * @param       string      $field_api_name     The API name of the lead field.
+     * 
+     * @return array | null
      */
-    public static function getLeadFieldByName($fieldApiName) {
-        return Client::send('GET', 'leads/schema/fields/' . $fieldApiName . '.json');
+    public static function getLeadFieldByName(String $field_api_name) {
+        return LeadField::manufacture(Client::send('GET', 'leads/schema/fields/' . $field_api_name . '.json'));
     }
 
     /**
-     * getLeadFields
+     * Update metadata for a lead field in the target instance. See update rules here. 
+     * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
      * 
+     * @param       string      $field_api_name             The API name of the lead field.
+     * @param       array       $update_lead_field_request  See Marketo API documentation (TODO: this needs to be an object)
+     * 
+     * @return array | null If array, an array of LeadFieldStatus
+     */
+    public static function updateLeadField(String $field_api_name, $update_lead_field_request) {
+        return LeadFieldStatus::manufacture(Client::send('POST', 'leads/schema/fields/' . $field_api_name . '.json', ['body'=>['input'=>$update_lead_field_request]]));
+    }
+
+    /**
      * Retrieves metadata for all lead fields in the target instance. 
      * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
      * 
-     * @return array
+     * @param   int         $batch_size         The batch size to return.  Max and default size is 300.
+     * @param   string      $next_page_token    The token returned from a previous call signifying more results are available using this token.
+     * 
+     * @return array | null
      */
-    public static function getLeadFields($batchSize = 300, $nextPageToken = null) {
-        if( $batchSize > 300 ) throw new \Exception("Batch size cannod exceed 300 for getLeadFields");
+    public static function getLeadFields($batch_size = 300, $next_page_token = null) {
+        if( $batch_size > 300 ) throw new \Exception("Batch size cannod exceed 300 for getLeadFields");
 
-        $params['query'] = ['batchSize'=>$batchSize];
+        $params['query'] = ['batchSize'=>$batch_size];
 
-        if( !is_null($nextPageToken) ) {
-            $params['query']['nextPageToken'] = $nextPageToken;
+        if( !is_null($next_page_token) ) {
+            $params['query']['nextPageToken'] = $next_page_token;
         }
 
-        return Client::send('GET', 'leads/schema/fields.json', $params);
+        return LeadField::manufacture(Client::send('GET', 'leads/schema/fields.json', $params));
     }
 
     /**
-     * getLeadParitions
+     * Create lead fields in the target instance. 
+     * Required Permissions: Read-Write Schema Custom Field
      * 
+     * @param   array       $create_lead_field      List of lead fields
+     * 
+     * @return array | null If array, an array of LeadFieldStatus
+     */
+    public static function createLeadFields($create_lead_field) {
+        return LeadFieldStatus::manufacture(Client::send('POST', 'leads/schema/fields.json', ['body'=>['input'=>$create_lead_field]]));
+    }
+
+    /**
+     * Returns metadata about program member objects in the target instance, including a list of all fields available for interaction via the APIs. 
+     * Required Permissions: Read-Only Lead, Read-Write Lead
+     * 
+     * @deprecated
+     * 
+     * @return array | null If array, an array of ProgramMemberAttribute
+     */
+    public static function describeProgramMember() {
+        //return ProgramMemberAttribute::manufacture(Client::send('GET', 'program/members/describe.json'));
+        return null;
+    }
+
+    /**
      * Returns a list of available partitions in the target instance. 
      * Required Permissions: Read-Only Lead, Read-Write Lead
      * 
-     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
-     * @return array | \WorldNewsGroup\Marketo\Exception\ErrorException
+     * @return LeadPartition[] | null
      */
     public static function getLeadPartitions() {
-        return Client::send('GET', 'leads/partitions.json');
+        return LeadPartition::manufacture(Client::send('GET', 'leads/partitions.json'));
+    }
+
+    /**
+     * Updates the lead partition for a list of leads. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @param   array   $update_lead_partition  List of leads
+     * @return Lead[] | null
+     */
+    public static function updateLeadPartition($update_lead_partition) {
+        return Lead::manufacture(Client::send('POST', 'leads/partitions.json', ['body'=>['input'=>$update_lead_partition]]));
+    }
+
+    /**
+     * Retrieves a list of leads which are members of the designated program. 
+     * Required Permissions: Read-Only Lead, Read-Write Lead
+     * 
+     * @param   string      $program_id         The id of the program to retrieve from
+     * @param   array       $fields             An array of fields to be returned for each record
+     * @param   int         $batch_size         Batch size to return.  Max and default is 300.
+     * @param   string      $next_page_token    A token will be returned by this endpoint if the result set is greater 
+     *                                          than the batch size and can be passed in a subsequent call through this parameter.
+     * @return Lead[] | null
+     */
+    public static function getLeadsByProgramId($program_id, $fields = [], $batch_size = 300, $next_page_token = "") {
+        $query = [
+            'batchSize'=>$batch_size
+        ];
+
+        if( !empty($fields) ) $body['fields'] = $fields;
+        if( !empty($next_page_token) ) $body['nextPageToken'] = $next_page_token;
+
+        return Lead::manufacture(Client::send('GET', 'leads/programs/' . $program_id . '.json', ['query'=>$query]));
+    }
+
+    /**
+     * Changes the program status of a list of leads in a target program. Only existing members of the program may have their status changed with this API. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @param   string      $program_id                     The id of the target program
+     * @param   array       $change_lead_program_status     List of lead and statuses
+     * 
+     * @return ChangeLeadProgramStatus[] | null
+     */
+    public static function changeLeadProgramStatus($program_id, $change_lead_program_status, $status = "") {
+        $body = [
+            'input'=>$change_lead_program_status
+        ];
+
+        if( !empty($status) ) $body['status'] = $status;
+
+        return ChangeLeadProgramStatus::manufacture(Client::send('POST', 'leads/programs/' . $program_id . '/status.json', ['body'=>$body]));
     }
 
     /**
      * Upserts a lead and generates a Push Lead to Marketo activity. 
      * Required Permissions: Read-Write Lead
      * 
-     * @param array     $lead_data      An array of lead arrays.
-     * @param string    $program_name   Program name to assign to each lead.
+     * @param   array       $lead_data        An array of lead arrays.
+     * @param   string      $program_name     Program name to assign to each lead.
+     * @param   string      $lookup_field     One of TODO: finish documentation
+     * @param   string      $action           The action to take.  Defaults to 'createOrUpdate'
      * 
-     * @return boolean
+     * @return Lead[] | null
      */
-    public static function pushLeadToMarketo(Array $lead_data, $program_name) {
+    public static function pushLeadToMarketo(Array $lead_data, $program_name = "", $lookup_field = 'email', $action = 'createOrUpdate') {
         $params = [
             'body'=>[
-                'lookupField'=>'email',
-                'action'=>'createOrUpdate',
+                'lookupField'=>$lookup_field,
+                'action'=>$action,
                 'input'=>$lead_data
             ]
         ];
+
+        if( !empty($program_name) ) $params['body']['programName'] = $program_name;
     
-        return Client::send('POST', 'leads/push.json', $params);
+        return Lead::manufacture(Client::send('POST', 'leads/push.json', $params));
     }
 
+    /**
+     * Upserts a lead and generates a "Fill out Form" activity which is associated back to program and/or campaign. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @param   array       $form_fields            Contains form fields and visitor data to use
+     * @param   int         $form_id                ID of the form
+     * @param   int         $program_id             Id of the program to add lead and/or program member custom fields to.
+     * 
+     * @return Form[] | null
+     */
+    public static function submitForm($form_fields, $form_id, $program_id = null) {
+        $body = [
+            'input'=>$form_fields,
+            'formId'=>$form_id
+        ];
+
+        if( !is_null($program_id) ) $body['programId'] = $program_id;
+
+        return Form::manufacture(Client::send('POST', 'leads/submitForm.json', ['body'=>$body]));
+    }
+
+    /**
+     * Associates a known Marketo lead record to a munchkin cookie and its associated web acitvity history. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @param   int       $lead_id     The id of the lead to associate
+     * @param   string     $cookie      The cookie value to associate
+     * 
+     * @return null
+     */
+    public static function associateLead($lead_id, $cookie) {
+        Client::send('POST', 'leads/' . $lead_id . '/associate.json', ['query'=>['cookie'=>$cookie]]);
+        return null;
+    }
+
+    /**
+     * Merges two or more known lead records into a single lead record. 
+     * Required Permissions: Read-Write Lead
+     * 
+     * @param   int    $master_lead_id     The id of the winning lead record
+     * @param   int    $slave_lead_id      The id of the losing record
+     * @param   array   $lead_ids           An array of ids of losing records
+     * @param   boolean $merge_in_crm       If true, will attempt to merge the designated records in a 
+     *                                      natively-synched CRM. Only valid for instances with are natively synched to SFDC.
+     * @return null
+     */
+    public static function mergeLeads($master_lead_id, $slave_lead_id = null, $lead_ids = [], $merge_in_crm = false) {
+        $query = [
+            'mergeInCRM'=>$merge_in_crm
+        ];
+
+        if( !empty($slave_lead_id) ) $query['leadId'] = $slave_lead_id;
+        if( !empty($lead_ids) ) $query['leadIds'] = $lead_ids;
+    
+        Client::send('POST', 'leads/' . $master_lead_id . '/merge.json', ['query'=>$query]);
+        return null;
+    }
+
+    /**
+     * Query static list membership for one lead. 
+     * Required Permissions: Read-Only Asset
+     * 
+     * @param   int    $lead_id    The Marketo lead ID
+     * 
+     * @return StaticList[] | null
+     */
+    public static function getListsByLeadId($lead_id, $batch_size = 300, $next_page_token = "") {
+        $query = [
+            'batchSize'=>$batch_size
+        ];
+
+        if( !empty($next_page_token) ) $query['nextPageToken'] = $next_page_token;
+
+        return StaticList::manufacture(Client::send('GET', 'leads/' . $lead_id . '/listMembership.json', ['query'=>$query]));
+    }
+
+    /**
+     * Query program membership for one lead. 
+     * Required Permissions: Read-Only Asset
+     * 
+     * @param   int    $lead_id                The Marketo lead ID
+     * @param   string  $earliest_updated_at    Exclude programs prior to this date. Must be valid ISO-8601 string. See Datetime field type description.
+     * @param   string  $latest_updated_at       Exclude programs after this date. Must be valid ISO-8601 string. See Datetime field type description.
+     * @param   string  $filter_type            Set to "programId" to filter a set of programs.
+     * @param   array   $filter_values          An array of program ids to match against
+     * 
+     * @return Program[] | null
+     */
+    public static function getProgramsByLeadId($lead_id, $earliest_updated_at = "", $latest_updated_at = "", $filter_type = "", $filter_values = [], $batch_size = 300, $next_page_token = "") {
+        $query = [
+            'batchSize'=>$batch_size
+        ];
+
+        if( !empty($earliest_updated_at) ) $query['earliestUpdatedAt'] = $earliest_updated_at;
+        if( !empty($latest_updated_at) ) $query['latestUpdatedAt'] = $latest_updated_at;
+        if( !empty($filter_type) ) $query['filterType'] = $filter_type;
+        if( !empty($filter_values) ) $query['filterValues'] = $filter_values;
+        if( !empty($next_page_token) ) $query['nextPageToken'] = $next_page_token;
+
+        return Program::manufacture(Client::send('GET', 'leads/' . $lead_id . '/programMembership.json', ['query'=>$query]));
+    }    
+
+    /**
+     * Query smart campaign membership for one lead. 
+     * Required Permissions: Read-Only Asset
+     * 
+     * @param   int    $lead_id                The Marketo lead ID
+     * @param   string  $earliest_updated_at    Exclude smart campaigns prior to this date. Must be valid ISO-8601 string. See Datetime field type description.
+     * @param   string  $latest_updated_at       Exclude smart campaigns after this date. Must be valid ISO-8601 string. See Datetime field type description.
+     * @param   int     $batch_size             Maximum number of records to return. Maximum and default is 300.
+     * @param   string  $next_page_token        A token will be returned by this endpoint if the result set is greater than the batch size and can be passed in 
+     *                                          a subsequent call through this parameter. See Paging Tokens for more info.
+     * 
+     * @return SmartCampaign[] | null
+     */
+    public static function getSmartCampaignsByLeadId($lead_id, $earliest_updated_at = "", $latest_updated_at = "", $batch_size = 300, $next_page_token = "") {
+        $query = [
+            'batchSize'=>$batch_size
+        ];
+
+        if( !empty($earliest_updated_at) ) $query['earliestUpdatedAt'] = $earliest_updated_at;
+        if( !empty($latest_updated_at) ) $query['latestUpdatedAt'] = $latest_updated_at;
+        if( !empty($next_page_token) ) $query['nextPageToken'] = $next_page_token;
+
+        return SmartCampaign::manufacture(Client::send('GET', 'leads/' . $lead_id . '/programMembership.json', ['query'=>$query]));
+    }      
 }

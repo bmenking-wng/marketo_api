@@ -7,7 +7,19 @@ use WorldNewsGroup\Marketo\Client;
 
 class Opportunity extends Model {
     public static $fields = [
-
+        'createdAt',
+        'dedupeFields',
+        'description',
+        'displayName',
+        'pluralName',
+        'fields',
+        'idField',
+        'apiName',
+        'relationships',
+        'searchableFields',
+        'updatedAt',
+        'state',
+        'version'
     ];
 
     /**
@@ -28,8 +40,6 @@ class Opportunity extends Model {
     } 
 
     /**
-     * getOpportunityFieldByName
-     * 
      * Retrieves metadata for single opportunity field. 
      * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
      * 
@@ -40,8 +50,6 @@ class Opportunity extends Model {
     }
 
     /**
-     * getOpportunityFields
-     * 
      * Retrieves metadata for all opportunity fields in the target instance. 
      * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
      * 
@@ -64,12 +72,10 @@ class Opportunity extends Model {
     }
 
     /**
-     * getOpportunities
-     * 
      * Returns a list of opportunities based on a filter and set of values. 
      * Required Permissions: Read-Only Opportunity, Read-Write Named Opportunity
      * 
-     * @return array | null
+     * @return CustomObject[] | null
      */
     public static function getOpportunities($filter_type, $filter_values, $fields = [], $batch_size = 300, $next_page_token = null) {
         $lookupObject = [
@@ -83,15 +89,15 @@ class Opportunity extends Model {
             $lookupObject['nextPageToken'] = $next_page_token;
         }
 
-        return Client::send('GET', 'opportunities.json', ['body'=>$lookupObject]);
+        return CustomObject::manufacture(Client::send('GET', 'opportunities.json', ['body'=>$lookupObject]));
     }
 
     /**
-     * syncOpportunities
-     * 
      * Allows inserting, updating, or upserting of opportunity records into the target instance. 
      * Required Permissions: Read-Write Named Opportunity
      * 
+     * 
+     * @return CustomObject[] | null
      */
     public static function syncOpportunities($custom_objects, $action = 'createOrUpdate', $dedupe_by = 'email') {
         $body = [
@@ -100,14 +106,14 @@ class Opportunity extends Model {
             'dedupeBy'=>$dedupe_by
         ];
 
-        return Client::send('POST', 'opportunities.json', ['body'=>$body]);
+        return CustomObject::manufacture(Client::send('POST', 'opportunities.json', ['body'=>$body]));
     }
 
     /**
-     * deleteOpportunities
-     * 
      * Deletes a list of opportunity records from the target instance. Input records should only have one member, based on the value of 'dedupeBy'. 
      * Required Permissions: Read-Write Named Opportunity
+     * 
+     * @return CustomObject[] | null
      */
     public static function deleteOpportunities($ids, $delete_by = null) {
         $body = [
@@ -118,22 +124,20 @@ class Opportunity extends Model {
             $body['deleteBy'] = $delete_by;
         }
 
-        return Client::send('POST', 'opportunities/delete.json', ['body'=>$body]);
+        return CustomObject::manufacture(Client::send('POST', 'opportunities/delete.json', ['body'=>$body]));
     }
 
     /**
-     * describeOpportunity
-     * 
      * Returns object and field metadata for Opportunity type records in the target instance. 
      * Required Permissions: Read-Only Opportunity, Read-Write Named Opportunity
+     * 
+     * @return Opportunity[] | null
      */
     public static function describeOpportunity() {
-        return Client::send('GET', 'opportunities/describe.json');
+        return Opportunity::manufacture(Client::send('GET', 'opportunities/describe.json'));
     }
 
     /**
-     * getOpportunityRoles
-     * 
      * Returns a list of opportunity roles based on a filter and set of values. 
      * Required Permissions: Read-Only Opportunity, Read-Write Named Opportunity
      */
@@ -156,7 +160,7 @@ class Opportunity extends Model {
             $body['nextPageToken'] = $next_page_token;
         }
 
-        return Client::send('GET', 'opportunities/roles.json', ['body'=>$body]);
+        return CustomObject::manufacture(Client::send('GET', 'opportunities/roles.json', ['body'=>$body]));
     }
 
     /**
@@ -164,6 +168,8 @@ class Opportunity extends Model {
      * 
      * Allows inserts, updates and upserts of Opportunity Role records in the target instance. 
      * Required Permissions: Read-Write Named Opportunity
+     * 
+     * @return CustomObject[] | null
      */
     public static function syncOpportunityRoles($custom_objects, $action = 'createOrUpdate', $dedupe_by = 'email') {
         $body = [
@@ -172,7 +178,7 @@ class Opportunity extends Model {
             'dedupeBy'=>$dedupe_by
         ];
 
-        return Client::send('POST', 'opportunities/roles.json', ['body'=>$body]);
+        return CustomObject::manufacture(Client::send('POST', 'opportunities/roles.json', ['body'=>$body]));
     }
 
     /**
@@ -180,6 +186,8 @@ class Opportunity extends Model {
      * 
      * Deletes a list of opportunities from the target instance. 
      * Required Permissions: Read-Write Named Opportunity
+     * 
+     * @return CustomObject[] | null
      */
     public static function deleteOpportunityRoles($input, $delete_by = null) {
         $body = [
@@ -190,7 +198,7 @@ class Opportunity extends Model {
             $body['deleteBy'] = $delete_by;
         }
 
-        return Client::send('POST', 'opportunities/roles/delete.json', ['body'=>$body]);
+        return CustomObject::manufacture(Client::send('POST', 'opportunities/roles/delete.json', ['body'=>$body]));
     }
 
     /**
@@ -198,8 +206,10 @@ class Opportunity extends Model {
      * 
      * Returns object and field metadata for Opportunity Roles in the target instance. 
      * Required Permissions: Read-Only Opportunity, Read-Write Named Opportunity
+     * 
+     * @return Opportunity[] | null
      */
     public static function describeOpportunityRole() {
-        return Client::send('GET', 'opportunities/roles/describe.json');
+        return Opportunity::manufacture(Client::send('GET', 'opportunities/roles/describe.json'));
     }
 }

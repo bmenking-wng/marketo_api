@@ -2,13 +2,13 @@
 
 namespace WorldNewsGroup\Marketo\Model;
 
-use WorldNewsGroup\Marketo\Client;
 use WorldNewsGroup\Marketo\Result;
-class LeadPartition extends Model {
+
+class StaticList extends Model {
     public static $fields = [
-        'description',
-        'id',
-        'name'
+        'createdAt',
+        'listId',
+        'updatedAt'
     ];
 
     /**
@@ -22,7 +22,7 @@ class LeadPartition extends Model {
         $objects = [];
 
         foreach($result->getResults() as $r) {
-            $objects[] = new LeadPartition($r);
+            $objects[] = new StaticList($r);
         }
         
         return $objects;

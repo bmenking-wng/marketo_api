@@ -13,7 +13,7 @@ final class LeadTest extends TestCase {
     }
 
     /**
-     * @covers \Lead
+     * @covers \Lead::getLeadById
      */
     public function testGetLeadByIdInvalidId() {
         $this->expectException(ErrorException::class);
@@ -22,7 +22,7 @@ final class LeadTest extends TestCase {
 
     /**
      * @depends testGetLeadByIdInvalidId
-     * @covers \Lead
+     * @covers \Lead::getLeadById
      */
     public function testGetLeadByIdValidId() {
         $result = Lead::getLeadById($_ENV['TEST_LEAD']);

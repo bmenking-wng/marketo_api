@@ -2,13 +2,20 @@
 
 namespace WorldNewsGroup\Marketo\Model;
 
-use WorldNewsGroup\Marketo\Client;
 use WorldNewsGroup\Marketo\Result;
-class LeadPartition extends Model {
+use WorldNewsGroup\Marketo\Client;
+
+class Program extends Model {
     public static $fields = [
-        'description',
         'id',
-        'name'
+        'acquiredBy',
+        'isExhausted',
+        'membershipDate',
+        'nurtureCadence',
+        'progressionStatus',
+        'reachedSuccess',
+        'stream',
+        'updatedAt'
     ];
 
     /**
@@ -22,7 +29,7 @@ class LeadPartition extends Model {
         $objects = [];
 
         foreach($result->getResults() as $r) {
-            $objects[] = new LeadPartition($r);
+            $objects[] = new Program($r);
         }
         
         return $objects;

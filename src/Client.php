@@ -8,9 +8,12 @@ class Client {
     /**
      * send
      * 
+     * @param   mixed[]    $params
+     * @param   String[]   $headers
+     * 
      * @return Result | ErrorException | null
      */
-    public static function send($method, $path, $params = [], $env = null, $headers = []) {
+    public static function send(String $method, String $path, $params = [], Environment $env = null, $headers = []) {
         if( is_null($env) ) {
             $env = Environment::currentEnvironment();
         }
@@ -57,15 +60,16 @@ class Client {
         if( $json['success'] ) {
             return new Result($json);
         }
-        else if( !$json['success'] && isset($json['errors']) ) {
+        else {
             throw new ErrorException($json['errors']);
         }
-        else {
-            return null;
-        }
+
     }
 
-    private static function getToken($env) {
+    /**
+     * @internal
+     */
+    private static function getToken(Environment $env) {
         $url = "https://" . $env->getMunchkinId() . ".mktorest.com/identity/oauth/token";
 
         $params = [

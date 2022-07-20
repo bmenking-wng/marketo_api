@@ -2,19 +2,19 @@
 
 namespace WorldNewsGroup\Marketo\Model;
 
-use WorldNewsGroup\Marketo\Client;
 use WorldNewsGroup\Marketo\Result;
-class LeadPartition extends Model {
+
+class LeadAttribute2 extends Model {
     public static $fields = [
-        'description',
-        'id',
-        'name'
+        'name',
+        'searchableFields',
+        'fields'
     ];
 
     /**
      * @internal
      * 
-     * Assembles Campaign objects based on the Result object
+     * Assembles objects based on the Result object
      * 
      * @return array An array of Campaign objects
      */
@@ -22,9 +22,9 @@ class LeadPartition extends Model {
         $objects = [];
 
         foreach($result->getResults() as $r) {
-            $objects[] = new LeadPartition($r);
+            $objects[] = new LeadAttribute2($r);
         }
         
         return $objects;
-    }  
+    }    
 }

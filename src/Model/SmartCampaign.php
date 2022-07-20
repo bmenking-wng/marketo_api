@@ -2,13 +2,14 @@
 
 namespace WorldNewsGroup\Marketo\Model;
 
-use WorldNewsGroup\Marketo\Client;
 use WorldNewsGroup\Marketo\Result;
-class LeadPartition extends Model {
+use WorldNewsGroup\Marketo\Client;
+
+class SmartCampaign extends Model {
     public static $fields = [
-        'description',
-        'id',
-        'name'
+        'createdAt',
+        'smartCampaignId',
+        'updatedAt'
     ];
 
     /**
@@ -22,7 +23,7 @@ class LeadPartition extends Model {
         $objects = [];
 
         foreach($result->getResults() as $r) {
-            $objects[] = new LeadPartition($r);
+            $objects[] = new SmartCampaign($r);
         }
         
         return $objects;
