@@ -13,70 +13,17 @@ class Result {
         $this->response = $response;
     }
 
+    /**
+     * getRequestId
+     * 
+     * Returns the Marketo API request ID associated with this result
+     * 
+     * @return string
+     */
     public function getRequestId() {
         return $this->response['requestId'];
     }
 
-    public function lead() {
-        foreach(Lead::$fields as $field) {
-            if( !isset($this->response[$field])) {
-                return null;
-            }
-        }
-
-        return new Lead($this->response['result']);
-    }
-
-    /**
-     * leads
-     * 
-     * @return array | null
-     */
-    public function leads() {
-        $response = [];
-
-        foreach($this->response['result'] as $data) {
-            if( !isset($data['firstName']) ) return null;
-
-            $response[] = new LeadField($data);
-        }
-
-        return $response;
-    }
-
-    /**
-     * fields
-     * 
-     * @return array | null
-     */
-    public function fields() {
-        $response = [];
-
-        foreach($this->response['result'] as $data) {
-            if( !isset($data['displayName']) ) return null;
-
-            $response[] = new LeadField($data);
-        }
-
-        return $response;
-    }
-
-    /**
-     * partitions
-     * 
-     * @return array | null
-     */
-    public function partitions() {
-        $response = [];
-
-        foreach($this->response['result'] as $data) {
-            if( !isset($data['description']) ) return null;
-
-            $response[] = new LeadPartition($data);
-        }
-
-        return $response;        
-    }
     /**
      * getNextPageToken
      * 

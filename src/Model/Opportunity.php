@@ -2,9 +2,30 @@
 
 namespace WorldNewsGroup\Marketo\Model;
 
+use WorldNewsGroup\Marketo\Result;
 use WorldNewsGroup\Marketo\Client;
 
-class Opportunities extends Model {
+class Opportunity extends Model {
+    public static $fields = [
+
+    ];
+
+    /**
+     * @internal
+     * 
+     * Assembles objects based on the Result object
+     * 
+     * @return array An array of Campaign objects
+     */
+    public static function manufacture(Result $result) {
+        $objects = [];
+
+        foreach($result->getResults() as $r) {
+            $objects[] = new Opportunity($r);
+        }
+        
+        return $objects;
+    } 
 
     /**
      * getOpportunityFieldByName
@@ -12,9 +33,10 @@ class Opportunities extends Model {
      * Retrieves metadata for single opportunity field. 
      * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
      * 
+     * @return array | null If array, array of LeadField
      */
     public static function getOpportunityFieldByName($fieldApiName) {
-        return Client::send('GET', 'opportunities/schema/fields/' . $fieldApiName . '.json');
+        return LeadField::manufacture(Client::send('GET', 'opportunities/schema/fields/' . $fieldApiName . '.json'));
     }
 
     /**
@@ -23,6 +45,7 @@ class Opportunities extends Model {
      * Retrieves metadata for all opportunity fields in the target instance. 
      * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
      * 
+     * @return array | null If array, array of LeadField
      */
     public static function getOpportunityFields($batch_size = 300, $next_page_token = null) {
         if( $batch_size > 300 ) {
@@ -37,7 +60,7 @@ class Opportunities extends Model {
             $query['nextPageToken'] = $next_page_token;
         }
 
-        return Client::send('GET', 'opportunities/schema/fields.json', ['query'=>$query]);
+        return LeadField::manufacture(Client::send('GET', 'opportunities/schema/fields.json', ['query'=>$query]));
     }
 
     /**
@@ -46,6 +69,7 @@ class Opportunities extends Model {
      * Returns a list of opportunities based on a filter and set of values. 
      * Required Permissions: Read-Only Opportunity, Read-Write Named Opportunity
      * 
+     * @return array | null
      */
     public static function getOpportunities($filter_type, $filter_values, $fields = [], $batch_size = 300, $next_page_token = null) {
         $lookupObject = [

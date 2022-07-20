@@ -2,9 +2,31 @@
 
 namespace WorldNewsGroup\Marketo\Model;
 
+use WorldNewsGroup\Marketo\Result;
 use WorldNewsGroup\Marketo\Client;
 
-class Activities extends Model {
+class Activity extends Model {
+    public static $fields = [
+
+    ];
+    
+    /**
+     * @internal
+     * 
+     * Assembles objects based on the Result object
+     * 
+     * @return array An array of Campaign objects
+     */
+    public static function manufacture(Result $result) {
+        $objects = [];
+
+        foreach($result->getResults() as $r) {
+            $objects[] = new Activity($r);
+        }
+        
+        return $objects;
+    } 
+
     /**
      * getLeadActivities
      * 

@@ -5,24 +5,17 @@ namespace WorldNewsGroup\Marketo\Model;
 use WorldNewsGroup\Marketo\Result;
 use WorldNewsGroup\Marketo\Client;
 
-class LeadField extends Model {
+class CustomObject extends Model {
     public static $fields = [
-        'displayName',
-        'name',
-        'description',
-        'dataType',
-        'length',
-        'isHidden',
-        'isHtmlEncodingInEmail',
-        'isSensitive',
-        'isCustom',
-        'isApiCreated'
+        'marktoGUID',
+        'reasons',
+        'seq'
     ];
 
     /**
      * @internal
      * 
-     * Assembles Campaign objects based on the Result object
+     * Assembles objects based on the Result object
      * 
      * @return array An array of Campaign objects
      */
@@ -30,9 +23,9 @@ class LeadField extends Model {
         $objects = [];
 
         foreach($result->getResults() as $r) {
-            $objects[] = new LeadField($r);
+            $objects[] = new CustomObject($r);
         }
         
         return $objects;
-    }  
+    } 
 }
