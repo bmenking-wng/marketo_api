@@ -30,7 +30,7 @@ class Result {
     /**
      * leads
      * 
-     * @return array \WorldNewsGroup\Marketo\Model\Lead | null
+     * @return array | null
      */
     public function leads() {
         $response = [];
@@ -47,7 +47,7 @@ class Result {
     /**
      * fields
      * 
-     * @return array \WorldNewsGroup\Marketo\Model\LeadField | null
+     * @return array | null
      */
     public function fields() {
         $response = [];
@@ -64,7 +64,7 @@ class Result {
     /**
      * partitions
      * 
-     * @return array \WorldNewsGroup\Marketo\Model\LeadPartition | null
+     * @return array | null
      */
     public function partitions() {
         $response = [];

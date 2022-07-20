@@ -18,8 +18,6 @@ class LeadField extends Model {
         'isApiCreated'
     ];
 
-    private $values;
-
     public function __construct($import) {
         $this->values = $import;
     }

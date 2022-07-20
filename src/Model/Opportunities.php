@@ -26,7 +26,7 @@ class Opportunities extends Model {
      */
     public static function getOpportunityFields($batch_size = 300, $next_page_token = null) {
         if( $batch_size > 300 ) {
-            throw new Exception('Batch size cannot exceed 300');
+            throw new \Exception('Batch size cannot exceed 300');
         }
 
         $query = [
@@ -115,7 +115,7 @@ class Opportunities extends Model {
      */
     public static function getOpportunityRoles($lookup_request, $filter_type, $filter_values, $fields = null, $batch_size = 300, $next_page_token = null) {
         if( $batch_size > 300 ) {
-            throw new Exception('Batch size cannot exceed 300');
+            throw new \Exception('Batch size cannot exceed 300');
         }
 
         $body = [

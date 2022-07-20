@@ -24,7 +24,7 @@ class Lead extends Model {
 
     public static function getLeadsByFilterType($filterType, $filterValues, $fields = [], $batchSize = 300, $nextPageToken = null) {
         if( $batchSize > 300 ) {
-            throw new Exception("getLeadsByFilterType: batchSize cannot exceed 300.");
+            throw new \Exception("getLeadsByFilterType: batchSize cannot exceed 300.");
         }
 
         $query = [
@@ -44,7 +44,8 @@ class Lead extends Model {
      * Returns metadata about lead objects in the target instance, including a list of all fields available for interaction via the APIs.
      * Note: This endpoint has been superceded. Use Describe Lead2 endpoint instead.
      * 
-     * @return \WorldNewsGroup\Marketo\Model\Lead | null
+     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
+     * @return \WorldNewsGroup\Marketo\Model\Lead | null | \WorldNewsGroup\Marketo\Exception\ErrorException
      */
     public static function describeLead() {
         return Client::send('GET', 'leads/describe.json');
@@ -55,7 +56,8 @@ class Lead extends Model {
      * 
      * Returns list of searchable fields on lead objects in the target instance.
      * 
-     * @return \WorldNewsGroup\Marketo\Model\Lead | null
+     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
+     * @return \WorldNewsGroup\Marketo\Model\Lead | null | \WorldNewsGroup\Marketo\Exception\ErrorException
      */
     public static function describeLead2() {
         return Client::send('GET', 'leads/describe2.json');
@@ -65,8 +67,8 @@ class Lead extends Model {
      * getLeadFieldByName
      * 
      * Retrieves metadata for single lead field.
-     * 
-     * @return \WOrldNewsGroup\Marketo\Model\LeadField | null
+     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
+     * @return \WorldNewsGroup\Marketo\Model\LeadField | null | \WorldNewsGroup\Marketo\Exception\ErrorException
      */
     public static function getLeadFieldByName($fieldApiName) {
         return Client::send('GET', 'leads/schema/fields/' . $fieldApiName . '.json');
@@ -78,10 +80,10 @@ class Lead extends Model {
      * Retrieves metadata for all lead fields in the target instance. 
      * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
      * 
-     * @return array \WorldNewsGroup\Marketo\Model\LeadField
+     * @return array
      */
     public static function getLeadFields($batchSize = 300, $nextPageToken = null) {
-        if( $batchSize > 300 ) throw new Exception("Batch size cannod exceed 300 for getLeadFields");
+        if( $batchSize > 300 ) throw new \Exception("Batch size cannod exceed 300 for getLeadFields");
 
         $params['query'] = ['batchSize'=>$batchSize];
 
@@ -98,7 +100,8 @@ class Lead extends Model {
      * Returns a list of available partitions in the target instance. 
      * Required Permissions: Read-Only Lead, Read-Write Lead
      * 
-     * @return array \WorldNewsGroup\Marketo\Model\LeadPartition
+     * @throws \WorldNewsGroup\Marketo\Exception\ErrorException
+     * @return array | \WorldNewsGroup\Marketo\Exception\ErrorException
      */
     public static function getLeadPartitions() {
         return Client::send('GET', 'leads/partitions.json');
@@ -136,7 +139,7 @@ class Lead extends Model {
      * Syncs a list of leads to the target instance. 
      * Required Permissions: Read-Write Lead
      * 
-     * @return something
+     * @return array
      */
     public static function syncLeads(Array $leads) {
         return Client::send('POST', 'leads.json', ['body'=>['input'=>$leads]]);
@@ -148,13 +151,10 @@ class Lead extends Model {
      * Delete a list of leads from the destination instance. 
      * Required Permissions: Read-Write Lead
      * 
-     * @return something
+     * @return boolean
      */
     public static function deleteLeads(Array $leads) {
         return Client::send('POST', 'leads/delete.json', ['body'=>['input'=>$leads]]);
     }
 
-    public static function updateLeadField($fieldApiName, $updateLeadFieldRequest = []) {
-        return Client::send('POST', 'leads/schema/fields/' . $fieldApiName . '.json', ['body'=>['updateLeadFieldRequest']]);
-    }
 }

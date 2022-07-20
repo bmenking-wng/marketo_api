@@ -8,7 +8,7 @@ class Client {
     /**
      * send
      * 
-     * @return ListResult | Result
+     * @return Result | ErrorException | null
      */
     public static function send($method, $path, $params = [], $env = null, $headers = []) {
         if( is_null($env) ) {
@@ -59,6 +59,9 @@ class Client {
         }
         else if( !$json['success'] && isset($json['errors']) ) {
             throw new ErrorException($json['errors']);
+        }
+        else {
+            return null;
         }
     }
 

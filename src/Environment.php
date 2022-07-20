@@ -10,6 +10,8 @@ class Environment {
     private $client_secret;
     private $munchkin_id;
 
+    private $endPoint;
+
     public function __construct($client_id, $client_secret, $munchkin_id) {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
