@@ -37,12 +37,18 @@ class Campaign extends Model {
     }
 
     /**
-     * getCampaigns
-     * 
      * Returns a list of campaign records. 
      * Required Permissions: Read-Only Campaigns, Read-Write Campaigns
      * 
-     * @return array | null If array, an array of Campaign objects.
+     * @param   int[]       $id
+     * @param   string[]    $name
+     * @param   string[]    $program_name
+     * @param   string[]    $workspace_name
+     * @param   int         $batch_size
+     * @param   string      $next_page_token
+     * @param   boolean     $is_triggerable
+     * 
+     * @return Campaign[] | null
      */
     public static function getCampaigns($id = [], $name = [], $program_name = [], $workspace_name = [], $batch_size = 300, $next_page_token = "", $is_triggerable = false) {
         $query = [
@@ -60,44 +66,45 @@ class Campaign extends Model {
     }
 
     /**
-     * getCampaignById
-     * 
-     * 
      * Returns the record of a campaign by its id. 
      * Required Permissions: Read-Only Campaigns, Read-Write Campaigns
      * 
      * @deprecated 
-     * @return array | null If array, an array of Campaign objects.
+     * @return Campaign[] | null
      */
     public static function getCampaignById($campaign_id) {
         return Campaign::manufacture(Client::send('GET', 'campaigns/' . $campaign_id . '.json'));
     }
 
     /**
-     * scheduleCampaign
-     * 
      * Remotely schedules a batch campaign to run at a given time. My tokens local to the campaign's parent program can be 
      * overridden for the run to customize content. When using the "cloneToProgramName" parameter described below, this 
      * endpoint is limited to 20 calls per day. 
      * Required Permissions: Execute Campaign
      * 
-     * @return array | null If array, an array of Campaign objects.
+     * @param   int     $campaign_id
+     * @param   array   $schedule_campaign_data
+     * 
+     * @return Campaign[] | null
      */
     public static function scheduleCampaign($campaign_id, $schedule_campaign_data) {
-        return Campaign::manufacture(Client::send('POST', 'campaigns/' . $campaign_id . '/schedule.json', ['body'=>$schedule_campaign_data]));
+        return Campaign::manufacture(Client::send('POST', 'campaigns/' . $campaign_id . '/schedule.json', 
+            ['body'=>['input'=>$schedule_campaign_data]]));
     }
 
     /**
-     * requestCampaign
-     * 
      * Passes a set of leads to a trigger campaign to run through the campaign's flow. The designated campaign must have 
      * a Campaign is Requested: Web Service API trigger, and must be active. My tokens local to the campaign's parent 
      * program can be overridden for the run to customize content. A maximum of 100 leads are allowed per call. 
      * Required Permissions: Execute Campaign
      * 
-     * @return array | null If array, an array of Campaign objects.
+     * @param   int     $campaign_id
+     * @param   array   $trigger_campaign_data
+     * 
+     * @return Campaign[] | null
      */
     public static function requestCampaign($campaign_id, $trigger_campaign_data) {
-        return Campaign::manufacture(Client::send('POST', 'campaigns/'. $campaign_id . '/trigger.json', ['body'=>$trigger_campaign_data]));
+        return Campaign::manufacture(Client::send('POST', 'campaigns/'. $campaign_id . '/trigger.json', 
+            ['body'=>['input'=>$trigger_campaign_data]]));
     }
 }
