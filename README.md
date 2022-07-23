@@ -3,11 +3,17 @@ Marketo API for PHP
 
 Wrapper for Marketo API
 
-![Banner]()
-
 <p align="center">
 <a href="LICENSE"><img src="https://img.shields.io/github/license/bmenking-wng/marketo_api" alt="Software License"></img></a>
 </p>
+
+## What Provides
+
+This version has classes built for the following controllers:
+- Activities
+- Campaigns
+- Leads
+- Opportunities
 
 ## Installation
 
