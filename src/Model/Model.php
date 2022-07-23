@@ -21,7 +21,7 @@ class Model {
      * @internal
      */
     public function __get($name) {
-        if( in_array($name, self::$fields) && isset(self::$fields[$name]) ) {
+        if( in_array($name, static::$fields) && isset(static::$fields[$name]) ) {
             return $this->values['result'][$name];
         }
     }
@@ -30,6 +30,6 @@ class Model {
      * @internal
      */
     public function __isset($name) {
-        return (in_array($name, self::$fields) && isset(self::$fields[$name]));
+        return (in_array($name, static::$fields) && isset(static::$fields[$name]));
     }
 }
