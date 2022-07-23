@@ -3,35 +3,33 @@
 namespace WorldNewsGroup\Marketo\Model;
 
 use WorldNewsGroup\Marketo\Result;
+use WorldNewsGroup\Marketo\Client;
 
-class CustomActivity extends Model {
+class ProgramMemberAttribute2 extends Model {
     public static $fields = [
-        'activityDate',
-        'activityTypeId',
-        'apiName',
-        'attributes',
-        'errors',
-        'id',
-        'leadId',
-        'marketoGUID',
-        'primaryAttributeValue',
-        'status'
+        'name',
+        'description',
+        'createdAt',
+        'updatedAt',
+        'dedupeFields',
+        'searchableFields',
+        'fields'
     ];
-    
+
     /**
      * @internal
      * 
      * Assembles objects based on the Result object
      * 
-     * @return CustomActivity[]
+     * @return ProgramMemberAttribute2[]
      */
     public static function manufacture(Result $result) {
         $objects = [];
 
         foreach($result->getResults() as $r) {
-            $objects[] = new CustomActivity($r);
+            $objects[] = new ProgramMemberAttribute2($r);
         }
         
         return $objects;
-    } 
+    }  
 }

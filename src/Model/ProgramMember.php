@@ -14,16 +14,41 @@ class ProgramMember extends Model {
         'createdAt'
     ];
 
-    public function __construct($import) {
-        $this->values = $import;
-    }
+    /**
+     * @internal
+     * 
+     * Assembles objects based on the Result object
+     * 
+     * @return ProgramMember[]
+     */
+    public static function manufacture(Result $result) {
+        $objects = [];
 
+        foreach($result->getResults() as $r) {
+            $objects[] = new ProgramMember($r);
+        }
+        
+        return $objects;
+    }  
+
+    /**
+     * Retrieves metadata for all program member fields in the target instance. 
+     * Required Permissions: Read-Write Schema Standard Field, Read-Write Schema Custom Field
+     * 
+     * @return LeadField[] | null
+     */
     public static function getProgramMemberFields() {
-        return Client::send('GET', 'programs/members/schema/fields.json');
+        return LeadField::manufacture(Client::send('GET', 'programs/members/schema/fields.json'));
     }
 
+    /**
+     * Returns metadata about program member objects in the target instance, including a list of all fields available for interaction via the APIs. 
+     * Required Permissions: Read-Only Lead, Read-Write Lead
+     * 
+     * @return ProgramMemberAttribute2[] | null
+     */
     public static function describeProgramMember() {
-        return Client::send('GET', 'program/members/describe.json');
+        return ProgramMemberAttribute2::manufacture(Client::send('GET', 'program/members/describe.json'));
     }
 }
 

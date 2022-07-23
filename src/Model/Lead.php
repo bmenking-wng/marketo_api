@@ -20,13 +20,13 @@ class Lead extends Model {
      * 
      * Assembles objects based on the Result object
      * 
-     * @return array An array of Campaign objects
+     * @return Lead[]
      */
     public static function manufacture(Result $result) {
         $objects = [];
 
         foreach($result->getResults() as $r) {
-            $objects[] = new Campaign($r);
+            $objects[] = new Lead($r);
         }
         
         return $objects;

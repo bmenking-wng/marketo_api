@@ -14,9 +14,9 @@ class LeadPartition extends Model {
     /**
      * @internal
      * 
-     * Assembles Campaign objects based on the Result object
+     * Assembles objects based on the Result object
      * 
-     * @return array An array of Campaign objects
+     * @return LeadPartition[]
      */
     public static function manufacture(Result $result) {
         $objects = [];

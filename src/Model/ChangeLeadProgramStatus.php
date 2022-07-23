@@ -17,7 +17,7 @@ class ChangeLeadProgramStatus extends Model {
      * 
      * Assembles Campaign objects based on the Result object
      * 
-     * @return array An array of Campaign objects
+     * @return ChangeLeadPorgramStatus[]
      */
     public static function manufacture(Result $result) {
         $objects = [];

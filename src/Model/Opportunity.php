@@ -27,7 +27,7 @@ class Opportunity extends Model {
      * 
      * Assembles objects based on the Result object
      * 
-     * @return array An array of Campaign objects
+     * @return Opportunity[]
      */
     public static function manufacture(Result $result) {
         $objects = [];

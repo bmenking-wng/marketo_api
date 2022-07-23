@@ -17,7 +17,7 @@ class CustomObject extends Model {
      * 
      * Assembles objects based on the Result object
      * 
-     * @return array An array of Campaign objects
+     * @return CustomObject[]
      */
     public static function manufacture(Result $result) {
         $objects = [];

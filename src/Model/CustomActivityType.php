@@ -24,7 +24,7 @@ class CustomActivityType extends Model {
      * 
      * Assembles objects based on the Result object
      * 
-     * @return array An array of objects
+     * @return CustomActivityType[]
      */
     public static function manufacture(Result $result) {
         $objects = [];

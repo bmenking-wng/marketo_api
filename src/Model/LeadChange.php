@@ -20,7 +20,7 @@ class LeadChange extends Model {
     /**
      * @internal
      * 
-     * Assembles Campaign objects based on the Result object
+     * Assembles objects based on the Result object
      * 
      * @return LeadChange[] An array of objects
      */

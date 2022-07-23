@@ -21,9 +21,9 @@ class Program extends Model {
     /**
      * @internal
      * 
-     * Assembles Campaign objects based on the Result object
+     * Assembles objects based on the Result object
      * 
-     * @return array An array of Campaign objects
+     * @return Program[]
      */
     public static function manufacture(Result $result) {
         $objects = [];

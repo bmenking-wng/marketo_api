@@ -22,9 +22,9 @@ class LeadField extends Model {
     /**
      * @internal
      * 
-     * Assembles Campaign objects based on the Result object
+     * Assembles objects based on the Result object
      * 
-     * @return array An array of Campaign objects
+     * @return LeadField[]
      */
     public static function manufacture(Result $result) {
         $objects = [];
