@@ -14,6 +14,7 @@ This version has classes built for the following controllers:
 - Campaigns
 - Leads
 - Opportunities
+- StaticLists
 - Usage
 
 ## Installation
