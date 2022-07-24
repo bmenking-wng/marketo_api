@@ -3,6 +3,7 @@
 namespace WorldNewsGroup\Marketo\Model;
 
 use WorldNewsGroup\Marketo\Client;
+use WorldNewsGroup\Marketo\Result;
 
 class ProgramMember extends Model {
     public static $fields = [
