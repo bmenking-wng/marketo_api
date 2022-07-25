@@ -40,7 +40,7 @@ class Lead extends Model {
      * @param   array       $fields         Array of field names.  If omitted, the following default fields will
      *                                      be returned: email, updatedAt, createdAt, lastName, firstName and id.
      * 
-     * @return array | null     If array, an array of Lead
+     * @return Lead[] | null
      */
     public static function getLeadById($lead_id, $fields = []) { 
         return Lead::manufacture(Client::send('GET', "lead/$lead_id.json", ['query'=>['fields'=>$fields], 'body'=>[]]));
@@ -57,7 +57,7 @@ class Lead extends Model {
      * @param   string      $next_page_token    Optional. A token will be returned by this endpoint if result is greater than batch size.
      *                                          The token can be passed to subsequent calls through this parameter.
      * 
-     * @return array | null If array, an array of Lead  
+     * @return Lead[] | null
      */
     public static function getLeadsByFilterType($filter_type, $filter_values, $fields = [], $batch_size = 300, $next_page_token = null) {
         if( $batch_size > 300 ) {
@@ -79,12 +79,27 @@ class Lead extends Model {
      * Syncs a list of leads to the target instance. 
      * Required Permissions: Read-Write Lead
      * 
-     * @param   array       $leads      sync lead request (TODO: need this as an object)
+     * @param   array       $leads          sync lead request (TODO: need this as an object)
+     * @param   string      $action         Type of sync operation to perform. Defaults to createOrUpdate 
+     *                                      if unset = ['createOnly', 'updateOnly', 'createOrUpdate', 'createDuplicate'].
+     * @param   string      $lookup_field   Field to deduplicate on. The field must be present in each lead record of the input. Defaults to email if unset.
+     * @param   string      $partition_name Name of the partition to operate on, if applicable. Should be set whenever 
+     *                                      possible, when interacting with an instance where partitions are enabled.
+     * @param   boolean     $async_processing   If set to true, the call will return immediately ,
      * 
-     * @return array | null If array, an array of Lead.
+     * @return Lead[] | null
      */
-    public static function syncLeads(Array $leads) {
-        return Lead::manufacture(Client::send('POST', 'leads.json', ['body'=>['input'=>$leads]]));
+    public static function syncLeads(Array $leads, $action = "createOrUpdate", $lookup_field = "email", $partition_name = "", $async_processing = false) {
+        $body = [
+            'input'=>$leads,
+            'action'=>$action,
+            'lookupField'=>$lookup_field,
+            'asyncProcessing'=>$async_processing
+        ];
+
+        if( !empty($partition_name) ) $body['partitionName'] = $partition_name;
+        
+        return Lead::manufacture(Client::send('POST', 'leads.json', ['body'=>$body]));
     }
 
     /**
@@ -93,7 +108,7 @@ class Lead extends Model {
      * 
      * @param   array       $leads      delete lead request (TODO: need this as an object)
      * 
-     * @return array | null If array, an array of Lead.
+     * @return Lead[] | null
      */
     public static function deleteLeads(Array $leads) {
         return Lead::manufacture(Client::send('POST', 'leads/delete.json', ['body'=>['input'=>$leads]]));
@@ -104,7 +119,7 @@ class Lead extends Model {
      * Note: This endpoint has been superceded. Use Describe Lead2 endpoint instead.
      * @deprecated
      * 
-     * @return array | null
+     * @return LeadAttribute[] | null
      */
     public static function describeLead() {
         return LeadAttribute::manufacture(Client::send('GET', 'leads/describe.json'));
@@ -113,7 +128,7 @@ class Lead extends Model {
     /**
      * Returns list of searchable fields on lead objects in the target instance.
      * 
-     * @return array | null
+     * @return LeadAttribute2[] | null
      */
     public static function describeLead2() {
         return LeadAttribute2::manufacture(Client::send('GET', 'leads/describe2.json'));
@@ -124,7 +139,7 @@ class Lead extends Model {
      * 
      * @param       string      $field_api_name     The API name of the lead field.
      * 
-     * @return array | null
+     * @return LeadField[] | null
      */
     public static function getLeadFieldByName(String $field_api_name) {
         return LeadField::manufacture(Client::send('GET', 'leads/schema/fields/' . $field_api_name . '.json'));
@@ -137,7 +152,7 @@ class Lead extends Model {
      * @param       string      $field_api_name             The API name of the lead field.
      * @param       array       $update_lead_field_request  See Marketo API documentation (TODO: this needs to be an object)
      * 
-     * @return array | null If array, an array of LeadFieldStatus
+     * @return LeadFieldStatus[] | null
      */
     public static function updateLeadField(String $field_api_name, $update_lead_field_request) {
         return LeadFieldStatus::manufacture(Client::send('POST', 'leads/schema/fields/' . $field_api_name . '.json', ['body'=>['input'=>$update_lead_field_request]]));
@@ -150,7 +165,7 @@ class Lead extends Model {
      * @param   int         $batch_size         The batch size to return.  Max and default size is 300.
      * @param   string      $next_page_token    The token returned from a previous call signifying more results are available using this token.
      * 
-     * @return array | null
+     * @return LeadField[] | null
      */
     public static function getLeadFields($batch_size = 300, $next_page_token = null) {
         if( $batch_size > 300 ) throw new \Exception("Batch size cannod exceed 300 for getLeadFields");
@@ -170,7 +185,7 @@ class Lead extends Model {
      * 
      * @param   array       $create_lead_field      List of lead fields
      * 
-     * @return array | null If array, an array of LeadFieldStatus
+     * @return LeadFieldStatus[] | null
      */
     public static function createLeadFields($create_lead_field) {
         return LeadFieldStatus::manufacture(Client::send('POST', 'leads/schema/fields.json', ['body'=>['input'=>$create_lead_field]]));
@@ -182,7 +197,7 @@ class Lead extends Model {
      * 
      * @deprecated
      * 
-     * @return array | null If array, an array of ProgramMemberAttribute
+     * @return null
      */
     public static function describeProgramMember() {
         //return ProgramMemberAttribute::manufacture(Client::send('GET', 'program/members/describe.json'));

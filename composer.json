@@ -33,5 +33,10 @@
         "allow-plugins": {
             "phpdocumentor/shim": true
         }
+    },
+    "scripts": {
+        "pre-commit-tests": [
+            "./vendor/bin/phpstan --level=3 analyse src/"
+        ]
     }
 }
