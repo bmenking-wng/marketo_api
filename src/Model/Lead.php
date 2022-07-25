@@ -12,7 +12,8 @@ class Lead extends Model {
         'lastName',
         'email',
         'updatedAt',
-        'createdAt'
+        'createdAt',
+        'status'
     ];
 
     /**
