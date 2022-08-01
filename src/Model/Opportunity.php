@@ -48,7 +48,7 @@ class Opportunity extends Model {
      * @return LeadField[] | null
      */
     public static function getOpportunityFieldByName($field_api_name) {
-        return LeadField::manufacture(Client::send('GET', 'opportunities/schema/fields/' . $field_api_name . '.json'));
+        return LeadField::manufacture(Client::send('GET', 'rest/v1/opportunities/schema/fields/' . $field_api_name . '.json'));
     }
 
     /**
@@ -73,7 +73,7 @@ class Opportunity extends Model {
             $query['nextPageToken'] = $next_page_token;
         }
 
-        return LeadField::manufacture(Client::send('GET', 'opportunities/schema/fields.json', ['query'=>$query]));
+        return LeadField::manufacture(Client::send('GET', 'rest/v1/opportunities/schema/fields.json', ['query'=>$query]));
     }
 
     /**
@@ -100,7 +100,7 @@ class Opportunity extends Model {
             $lookupObject['nextPageToken'] = $next_page_token;
         }
 
-        return CustomObject::manufacture(Client::send('GET', 'opportunities.json', ['body'=>$lookupObject]));
+        return CustomObject::manufacture(Client::send('GET', 'rest/v1/opportunities.json', ['body'=>$lookupObject]));
     }
 
     /**
@@ -120,7 +120,7 @@ class Opportunity extends Model {
             'dedupeBy'=>$dedupe_by
         ];
 
-        return CustomObject::manufacture(Client::send('POST', 'opportunities.json', ['body'=>$body]));
+        return CustomObject::manufacture(Client::send('POST', 'rest/v1/opportunities.json', ['body'=>$body]));
     }
 
     /**
@@ -142,7 +142,7 @@ class Opportunity extends Model {
             $body['deleteBy'] = $delete_by;
         }
 
-        return CustomObject::manufacture(Client::send('POST', 'opportunities/delete.json', ['body'=>$body]));
+        return CustomObject::manufacture(Client::send('POST', 'rest/v1/opportunities/delete.json', ['body'=>$body]));
     }
 
     /**
@@ -152,7 +152,7 @@ class Opportunity extends Model {
      * @return Opportunity[] | null
      */
     public static function describeOpportunity() {
-        return Opportunity::manufacture(Client::send('GET', 'opportunities/describe.json'));
+        return Opportunity::manufacture(Client::send('GET', 'rest/v1/opportunities/describe.json'));
     }
 
     /**
@@ -180,7 +180,7 @@ class Opportunity extends Model {
             $body['nextPageToken'] = $next_page_token;
         }
 
-        return CustomObject::manufacture(Client::send('GET', 'opportunities/roles.json', ['body'=>$body]));
+        return CustomObject::manufacture(Client::send('GET', 'rest/v1/opportunities/roles.json', ['body'=>$body]));
     }
 
     /**
@@ -200,7 +200,7 @@ class Opportunity extends Model {
             'dedupeBy'=>$dedupe_by
         ];
 
-        return CustomObject::manufacture(Client::send('POST', 'opportunities/roles.json', ['body'=>$body]));
+        return CustomObject::manufacture(Client::send('POST', 'rest/v1/opportunities/roles.json', ['body'=>$body]));
     }
 
     /**
@@ -221,7 +221,7 @@ class Opportunity extends Model {
             $body['deleteBy'] = $delete_by;
         }
 
-        return CustomObject::manufacture(Client::send('POST', 'opportunities/roles/delete.json', ['body'=>$body]));
+        return CustomObject::manufacture(Client::send('POST', 'rest/v1/opportunities/roles/delete.json', ['body'=>$body]));
     }
 
     /**
@@ -231,6 +231,6 @@ class Opportunity extends Model {
      * @return Opportunity[] | null
      */
     public static function describeOpportunityRole() {
-        return Opportunity::manufacture(Client::send('GET', 'opportunities/roles/describe.json'));
+        return Opportunity::manufacture(Client::send('GET', 'rest/v1/opportunities/roles/describe.json'));
     }
 }

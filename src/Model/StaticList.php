@@ -53,7 +53,7 @@ class StaticList extends Model {
         if( !empty($fields) ) $query['fields'] = $fields;
         if( !is_null($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
-        return Lead::manufacture(Client::send('GET', 'list/' . $list_id . '/leads.json', ['query'=>$query]));
+        return Lead::manufacture(Client::send('GET', 'rest/v1/list/' . $list_id . '/leads.json', ['query'=>$query]));
     }
 
     /**
@@ -80,7 +80,7 @@ class StaticList extends Model {
         if( !empty($workspace_name) ) $query['workspaceName'] = $workspace_name;
         if( !is_null($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
-        return StaticList::manufacture(Client::send('GET', 'lists.json', ['query'=>$query]));
+        return StaticList::manufacture(Client::send('GET', 'rest/v1/lists.json', ['query'=>$query]));
     }
 
     /**
@@ -92,7 +92,7 @@ class StaticList extends Model {
      * @return StaticList[] | null
      */
     public static function getListById($list_id) {
-        return StaticList::manufacture(Client::send('GET', 'lists/' . $list_id . '.json'));
+        return StaticList::manufacture(Client::send('GET', 'rest/v1/lists/' . $list_id . '.json'));
     }
 
     /**
@@ -106,7 +106,7 @@ class StaticList extends Model {
      */
     public static function removeFromList($list_id, $ids = []) {
         // TODO: need an object for the ListOperationOutputData returned by this call
-        return Client::send('DELETE', 'lists/' . $list_id . '/leads.json', ['query'=>['input'=>$ids]]);
+        return Client::send('DELETE', 'rest/v1/lists/' . $list_id . '/leads.json', ['query'=>['input'=>$ids]]);
     }
 
     /**
@@ -120,7 +120,7 @@ class StaticList extends Model {
      */
     public static function addToList($list_id, $ids = []) {
         // TODO: need an object for the ListOperationOutputData returned by this call
-        return Client::send('POST', 'lists/' . $list_id . '/leads.json', ['query'=>['input'=>$ids]]);
+        return Client::send('POST', 'rest/v1/lists/' . $list_id . '/leads.json', ['query'=>['input'=>$ids]]);
     }
 
     /**
@@ -134,6 +134,6 @@ class StaticList extends Model {
      */
     public static function memberOfList($list_id, $ids = []) {
         // TODO: need an object for the ListOperationOutputData returned by this call
-        return Client::send('POST', 'lists/' . $list_id . '/leads/ismember.json', ['query'=>['input'=>$ids]]);
+        return Client::send('POST', 'rest/v1/lists/' . $list_id . '/leads/ismember.json', ['query'=>['input'=>$ids]]);
     }
 }

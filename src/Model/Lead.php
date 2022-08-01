@@ -44,7 +44,7 @@ class Lead extends Model {
      * @return Lead[] | null
      */
     public static function getLeadById($lead_id, $fields = []) { 
-        return Lead::manufacture(Client::send('GET', "lead/$lead_id.json", ['query'=>['fields'=>$fields], 'body'=>[]]));
+        return Lead::manufacture(Client::send('GET', "rest/v1/lead/$lead_id.json", ['query'=>['fields'=>$fields], 'body'=>[]]));
     }
 
     /**
@@ -73,7 +73,7 @@ class Lead extends Model {
             'nextPageToken'=>$next_page_token
         ];
 
-        return Lead::manufacture(Client::send('GET', "leads.json", ['query'=>$query]));
+        return Lead::manufacture(Client::send('GET', "rest/v1/leads.json", ['query'=>$query]));
     }
 
     /**
@@ -100,7 +100,7 @@ class Lead extends Model {
 
         if( !empty($partition_name) ) $body['partitionName'] = $partition_name;
         
-        return Lead::manufacture(Client::send('POST', 'leads.json', ['body'=>$body]));
+        return Lead::manufacture(Client::send('POST', 'rest/v1/leads.json', ['body'=>$body]));
     }
 
     /**
@@ -112,7 +112,7 @@ class Lead extends Model {
      * @return Lead[] | null
      */
     public static function deleteLeads(Array $leads) {
-        return Lead::manufacture(Client::send('POST', 'leads/delete.json', ['body'=>['input'=>$leads]]));
+        return Lead::manufacture(Client::send('POST', 'rest/v1/leads/delete.json', ['body'=>['input'=>$leads]]));
     }
 
     /**
@@ -123,7 +123,7 @@ class Lead extends Model {
      * @return LeadAttribute[] | null
      */
     public static function describeLead() {
-        return LeadAttribute::manufacture(Client::send('GET', 'leads/describe.json'));
+        return LeadAttribute::manufacture(Client::send('GET', 'rest/v1/leads/describe.json'));
     }
 
     /**
@@ -132,7 +132,7 @@ class Lead extends Model {
      * @return LeadAttribute2[] | null
      */
     public static function describeLead2() {
-        return LeadAttribute2::manufacture(Client::send('GET', 'leads/describe2.json'));
+        return LeadAttribute2::manufacture(Client::send('GET', 'rest/v1/leads/describe2.json'));
     }
 
     /**
@@ -143,7 +143,7 @@ class Lead extends Model {
      * @return LeadField[] | null
      */
     public static function getLeadFieldByName(String $field_api_name) {
-        return LeadField::manufacture(Client::send('GET', 'leads/schema/fields/' . $field_api_name . '.json'));
+        return LeadField::manufacture(Client::send('GET', 'rest/v1/leads/schema/fields/' . $field_api_name . '.json'));
     }
 
     /**
@@ -156,7 +156,7 @@ class Lead extends Model {
      * @return LeadFieldStatus[] | null
      */
     public static function updateLeadField(String $field_api_name, $update_lead_field_request) {
-        return LeadFieldStatus::manufacture(Client::send('POST', 'leads/schema/fields/' . $field_api_name . '.json', ['body'=>['input'=>$update_lead_field_request]]));
+        return LeadFieldStatus::manufacture(Client::send('POST', 'rest/v1/leads/schema/fields/' . $field_api_name . '.json', ['body'=>['input'=>$update_lead_field_request]]));
     }
 
     /**
@@ -177,7 +177,7 @@ class Lead extends Model {
             $params['query']['nextPageToken'] = $next_page_token;
         }
 
-        return LeadField::manufacture(Client::send('GET', 'leads/schema/fields.json', $params));
+        return LeadField::manufacture(Client::send('GET', 'rest/v1/leads/schema/fields.json', $params));
     }
 
     /**
@@ -189,7 +189,7 @@ class Lead extends Model {
      * @return LeadFieldStatus[] | null
      */
     public static function createLeadFields($create_lead_field) {
-        return LeadFieldStatus::manufacture(Client::send('POST', 'leads/schema/fields.json', ['body'=>['input'=>$create_lead_field]]));
+        return LeadFieldStatus::manufacture(Client::send('POST', 'rest/v1/leads/schema/fields.json', ['body'=>['input'=>$create_lead_field]]));
     }
 
     /**
@@ -201,7 +201,7 @@ class Lead extends Model {
      * @return null
      */
     public static function describeProgramMember() {
-        //return ProgramMemberAttribute::manufacture(Client::send('GET', 'program/members/describe.json'));
+        //return ProgramMemberAttribute::manufacture(Client::send('GET', 'rest/v1/program/members/describe.json'));
         return null;
     }
 
@@ -212,7 +212,7 @@ class Lead extends Model {
      * @return LeadPartition[] | null
      */
     public static function getLeadPartitions() {
-        return LeadPartition::manufacture(Client::send('GET', 'leads/partitions.json'));
+        return LeadPartition::manufacture(Client::send('GET', 'rest/v1/leads/partitions.json'));
     }
 
     /**
@@ -223,7 +223,7 @@ class Lead extends Model {
      * @return Lead[] | null
      */
     public static function updateLeadPartition($update_lead_partition) {
-        return Lead::manufacture(Client::send('POST', 'leads/partitions.json', ['body'=>['input'=>$update_lead_partition]]));
+        return Lead::manufacture(Client::send('POST', 'rest/v1/leads/partitions.json', ['body'=>['input'=>$update_lead_partition]]));
     }
 
     /**
@@ -245,7 +245,7 @@ class Lead extends Model {
         if( !empty($fields) ) $body['fields'] = $fields;
         if( !empty($next_page_token) ) $body['nextPageToken'] = $next_page_token;
 
-        return Lead::manufacture(Client::send('GET', 'leads/programs/' . $program_id . '.json', ['query'=>$query]));
+        return Lead::manufacture(Client::send('GET', 'rest/v1/leads/programs/' . $program_id . '.json', ['query'=>$query]));
     }
 
     /**
@@ -264,7 +264,7 @@ class Lead extends Model {
 
         if( !empty($status) ) $body['status'] = $status;
 
-        return ChangeLeadProgramStatus::manufacture(Client::send('POST', 'leads/programs/' . $program_id . '/status.json', ['body'=>$body]));
+        return ChangeLeadProgramStatus::manufacture(Client::send('POST', 'rest/v1/leads/programs/' . $program_id . '/status.json', ['body'=>$body]));
     }
 
     /**
@@ -289,7 +289,7 @@ class Lead extends Model {
 
         if( !empty($program_name) ) $params['body']['programName'] = $program_name;
     
-        return Lead::manufacture(Client::send('POST', 'leads/push.json', $params));
+        return Lead::manufacture(Client::send('POST', 'rest/v1/leads/push.json', $params));
     }
 
     /**
@@ -310,7 +310,7 @@ class Lead extends Model {
 
         if( !is_null($program_id) ) $body['programId'] = $program_id;
 
-        return Form::manufacture(Client::send('POST', 'leads/submitForm.json', ['body'=>$body]));
+        return Form::manufacture(Client::send('POST', 'rest/v1/leads/submitForm.json', ['body'=>$body]));
     }
 
     /**
@@ -323,7 +323,7 @@ class Lead extends Model {
      * @return null
      */
     public static function associateLead($lead_id, $cookie) {
-        Client::send('POST', 'leads/' . $lead_id . '/associate.json', ['query'=>['cookie'=>$cookie]]);
+        Client::send('POST', 'rest/v1/leads/' . $lead_id . '/associate.json', ['query'=>['cookie'=>$cookie]]);
         return null;
     }
 
@@ -346,7 +346,7 @@ class Lead extends Model {
         if( !empty($slave_lead_id) ) $query['leadId'] = $slave_lead_id;
         if( !empty($lead_ids) ) $query['leadIds'] = $lead_ids;
     
-        Client::send('POST', 'leads/' . $master_lead_id . '/merge.json', ['query'=>$query]);
+        Client::send('POST', 'rest/v1/leads/' . $master_lead_id . '/merge.json', ['query'=>$query]);
         return null;
     }
 
@@ -365,7 +365,7 @@ class Lead extends Model {
 
         if( !empty($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
-        return StaticList::manufacture(Client::send('GET', 'leads/' . $lead_id . '/listMembership.json', ['query'=>$query]));
+        return StaticList::manufacture(Client::send('GET', 'rest/v1/leads/' . $lead_id . '/listMembership.json', ['query'=>$query]));
     }
 
     /**
@@ -391,7 +391,7 @@ class Lead extends Model {
         if( !empty($filter_values) ) $query['filterValues'] = $filter_values;
         if( !empty($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
-        return Program::manufacture(Client::send('GET', 'leads/' . $lead_id . '/programMembership.json', ['query'=>$query]));
+        return Program::manufacture(Client::send('GET', 'rest/v1/leads/' . $lead_id . '/programMembership.json', ['query'=>$query]));
     }    
 
     /**
@@ -416,6 +416,6 @@ class Lead extends Model {
         if( !empty($latest_updated_at) ) $query['latestUpdatedAt'] = $latest_updated_at;
         if( !empty($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
-        return SmartCampaign::manufacture(Client::send('GET', 'leads/' . $lead_id . '/programMembership.json', ['query'=>$query]));
+        return SmartCampaign::manufacture(Client::send('GET', 'rest/v1/leads/' . $lead_id . '/programMembership.json', ['query'=>$query]));
     }      
 }

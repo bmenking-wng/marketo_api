@@ -39,7 +39,7 @@ class ProgramMember extends Model {
      * @return LeadField[] | null
      */
     public static function getProgramMemberFields() {
-        return LeadField::manufacture(Client::send('GET', 'programs/members/schema/fields.json'));
+        return LeadField::manufacture(Client::send('GET', 'rest/v1/programs/members/schema/fields.json'));
     }
 
     /**
@@ -49,7 +49,7 @@ class ProgramMember extends Model {
      * @return ProgramMemberAttribute2[] | null
      */
     public static function describeProgramMember() {
-        return ProgramMemberAttribute2::manufacture(Client::send('GET', 'program/members/describe.json'));
+        return ProgramMemberAttribute2::manufacture(Client::send('GET', 'rest/v1/program/members/describe.json'));
     }
 }
 

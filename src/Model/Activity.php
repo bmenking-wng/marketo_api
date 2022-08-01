@@ -60,7 +60,7 @@ class Activity extends Model {
         if( !is_null($list_id) ) $query['listId'] = $list_id;
         if( !empty($lead_ids) ) $query['leadIds'] = $lead_ids;
         
-        return Activity::manufacture(Client::send('GET', 'activities.json', ['query'=>$query]));
+        return Activity::manufacture(Client::send('GET', 'rest/v1/activities.json', ['query'=>$query]));
     }
 
     /**
@@ -78,7 +78,7 @@ class Activity extends Model {
             'nextPageToken'=>$next_page_token
         ];
 
-        return Activity::manufacture(Client::send('GET', 'deletedleads.json', ['query'=>$query]));
+        return Activity::manufacture(Client::send('GET', 'rest/v1/deletedleads.json', ['query'=>$query]));
     }
 
     /**
@@ -90,7 +90,7 @@ class Activity extends Model {
      * @return CustomActivity[] | null
      */
     public static function addCustomActivities($custom_activities) {
-        return CustomActivity::manufacture(Client::send('POST', 'activities/external.json', ['body'=>['input'=>$custom_activities]]));
+        return CustomActivity::manufacture(Client::send('POST', 'rest/v1/activities/external.json', ['body'=>['input'=>$custom_activities]]));
     }
 
     /**
@@ -118,7 +118,7 @@ class Activity extends Model {
 
         if( !empty($description) ) $body['description'] = $description;
 
-        return CustomActivity::manufacture(Client::send('POST', 'activities/external/type.json', ['body'=>$body]));
+        return CustomActivity::manufacture(Client::send('POST', 'rest/v1/activities/external/type.json', ['body'=>$body]));
     }
 
     /**
@@ -145,7 +145,7 @@ class Activity extends Model {
 
         if( !empty($description) ) $body['description'] = $description;
 
-        return CustomActivityType::manufacture(Client::send('POST', 'activities/external/type/' . $api_name . '.json', ['body'=>$body]));
+        return CustomActivityType::manufacture(Client::send('POST', 'rest/v1/activities/external/type/' . $api_name . '.json', ['body'=>$body]));
     }
 
     /**
@@ -157,7 +157,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function approveCustomActivityType($api_name) {
-        return CustomActivityType::manufacture(Client::send('POST', 'activities/external/type/' . $api_name . '/approve.json'));
+        return CustomActivityType::manufacture(Client::send('POST', 'rest/v1/activities/external/type/' . $api_name . '/approve.json'));
     }
 
     /**
@@ -170,7 +170,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function createCustomActivityTypeAttributes($api_name, $custom_activity_type) {
-        return CustomActivityType::manufacture(Client::send('POST', 'activities/external/type/' . $api_name . '/create.json', ['body'=>['attributes'=>$custom_activity_type]]));
+        return CustomActivityType::manufacture(Client::send('POST', 'rest/v1/activities/external/type/' . $api_name . '/create.json', ['body'=>['attributes'=>$custom_activity_type]]));
     }
 
     /**
@@ -183,7 +183,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function deleteCustomActivityTypeAttributes($api_name, $custom_activity_type_attributes) {
-        return CustomActivityType::manufacture(Client::send('POST', 'activities/external/type/' . $api_name . '/attributes/delete.json', 
+        return CustomActivityType::manufacture(Client::send('POST', 'rest/v1/activities/external/type/' . $api_name . '/attributes/delete.json', 
             ['body'=>['attributes'=>$custom_activity_type_attributes]]));
     }
 
@@ -197,7 +197,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function updateCustomActivityTypeAttributes($api_name, $custom_activity_type_attributes) {
-        return CustomActivityType::manufacture(Client::send('POST', 'activities/external/type/' . $api_name . '/attributes/update.json', 
+        return CustomActivityType::manufacture(Client::send('POST', 'rest/v1/activities/external/type/' . $api_name . '/attributes/update.json', 
             ['body'=>['attributes'=>$custom_activity_type_attributes]]));
     }
 
@@ -210,7 +210,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function deleteCustomActivityType($api_name) {
-        return CustomActivityType::manufacture(Client::send('POST', 'activities/external/type/' . $api_name . '/delete.json'));
+        return CustomActivityType::manufacture(Client::send('POST', 'rest/v1/activities/external/type/' . $api_name . '/delete.json'));
     }
 
     /**
@@ -223,7 +223,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function describeCustomActivityType($api_name, $draft = false) {
-        return CustomActivityType::manufacture(Client::send('GET', 'activities/external/type/' . $api_name . '/describe.json', ['query'=>['draft'=>$draft]]));
+        return CustomActivityType::manufacture(Client::send('GET', 'rest/v1/activities/external/type/' . $api_name . '/describe.json', ['query'=>['draft'=>$draft]]));
     }
 
     /**
@@ -235,7 +235,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function discardCustomActivityTypeDraft($api_name) {
-        return CustomActivityType::manufacture(Client::send('POST', 'activities/external/type/' . $api_name . '/discardDraft.json'));
+        return CustomActivityType::manufacture(Client::send('POST', 'rest/v1/activities/external/type/' . $api_name . '/discardDraft.json'));
     }
 
     /**
@@ -245,7 +245,7 @@ class Activity extends Model {
      * @return CustomActivityType[] | null
      */
     public static function getCustomActivityTypes() {
-        return CustomActivityType::manufacture(Client::send('GET', 'activities/external/types.json'));
+        return CustomActivityType::manufacture(Client::send('GET', 'rest/v1/activities/external/types.json'));
     }
 
     /**
@@ -270,7 +270,7 @@ class Activity extends Model {
         if( !is_null($list_id) ) $query['listId'] = $list_id;
         if( !empty($lead_ids) ) $query['leadIds'] = $lead_ids;
 
-        return LeadChange::manufacture(Client::send('GET', 'activities/leadchanges.json', ['query'=>$query]));
+        return LeadChange::manufacture(Client::send('GET', 'rest/v1/activities/leadchanges.json', ['query'=>$query]));
     }
 
     /**
@@ -282,7 +282,7 @@ class Activity extends Model {
      * @return string A page token
      */
     public static function getPagingToken($since) {
-        return Client::send('GET', 'activities/pagingtoken.json', ['query'=>['sinceDatetime'=>$since]])->getNextPageToken();
+        return Client::send('GET', 'rest/v1/activities/pagingtoken.json', ['query'=>['sinceDatetime'=>$since]])->getNextPageToken();
     }
 
     /**
@@ -292,7 +292,7 @@ class Activity extends Model {
      * @return ActivityType[] | null
      */
     public static function getActivityTypes() {
-        return ActivityType::manufacture(Client::send('GET', 'activities/types.json'));
+        return ActivityType::manufacture(Client::send('GET', 'rest/v1/activities/types.json'));
     }
 
 }

@@ -52,7 +52,7 @@ class SalesPerson extends Model {
         if( !empty($fields) ) $query['fields'] = $fields;
         if( !is_null($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
-        return SalesPerson::manufacture(Client::send('GET', 'salespersons.json', ['query'=>$query]));
+        return SalesPerson::manufacture(Client::send('GET', 'rest/v1/salespersons.json', ['query'=>$query]));
     }
 
     /**
@@ -72,7 +72,7 @@ class SalesPerson extends Model {
             'dedupeBy'=>$dedupe_by
         ];
 
-        return SalesPerson::manufacture(Client::send('POST', 'salespersons.json', ['body'=>$body]));
+        return SalesPerson::manufacture(Client::send('POST', 'rest/v1/salespersons.json', ['body'=>$body]));
     }    
 
     /**
@@ -90,7 +90,7 @@ class SalesPerson extends Model {
             'deleteBy'=>$delete_by
         ];
 
-        return SalesPerson::manufacture(Client::send('POST', 'salespersons/delete.json', ['body'=>$body]));
+        return SalesPerson::manufacture(Client::send('POST', 'rest/v1/salespersons/delete.json', ['body'=>$body]));
     }     
     
     /**
@@ -100,6 +100,6 @@ class SalesPerson extends Model {
      * @return ObjectMetaData[] | null
      */
     public static function describeSalesPersons() {
-        return ObjectMetaData::manufacture(Client::send('GET', 'salespersons/describe.json'));
+        return ObjectMetaData::manufacture(Client::send('GET', 'rest/v1/salespersons/describe.json'));
     }    
 }

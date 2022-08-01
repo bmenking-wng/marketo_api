@@ -36,7 +36,7 @@ class Usage extends Model {
      * @return Errors[] | null
      */
     public static function getDailyErrors() {
-        return Errors::manufacture(Client::send('GET', 'stats/errors.json'));
+        return Errors::manufacture(Client::send('GET', 'rest/v1/stats/errors.json'));
     }
 
     /**
@@ -46,7 +46,7 @@ class Usage extends Model {
      * @return Errors[] | null
      */
     public static function getWeeklyErrors() {
-        return Errors::manufacture(Client::send('GET', 'stats/errors/last7days.json'));
+        return Errors::manufacture(Client::send('GET', 'rest/v1/stats/errors/last7days.json'));
     }
 
     /**
@@ -56,7 +56,7 @@ class Usage extends Model {
      * @return Usage[] | null
      */
     public static function getDailyUsage() {
-        return Usage::manufacture(Client::send('GET', 'stats/usage.json'));
+        return Usage::manufacture(Client::send('GET', 'rest/v1/stats/usage.json'));
     }
 
     /**
@@ -66,6 +66,6 @@ class Usage extends Model {
      * @return Usage[] | null
      */
     public static function getWeeklyUsage() {
-        return Usage::manufacture(Client::send('GET', 'stats/usage/last7days.json'));
+        return Usage::manufacture(Client::send('GET', 'rest/v1/stats/usage/last7days.json'));
     }    
 }

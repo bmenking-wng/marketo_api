@@ -23,7 +23,7 @@ class Environment {
         $this->client_secret = $client_secret;
         $this->munchkin_id = $munchkin_id;
 
-        $this->endPoint = "https://" . $munchkin_id . ".mktorest.com/rest/v1/";
+        $this->endPoint = "https://" . $munchkin_id . ".mktorest.com/";
     }
 
     public static function configure(String $client_id, String $client_secret, String $munchkin_id) {

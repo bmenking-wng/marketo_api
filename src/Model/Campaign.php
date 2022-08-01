@@ -62,7 +62,7 @@ class Campaign extends Model {
         if( !empty($workspace_name) ) $query['id'] = $workspace_name;
         if( !empty($next_page_token) ) $query['id'] = $next_page_token;
 
-        return Campaign::manufacture(Client::send('GET', 'campaigns.json', ['query'=>$query]));
+        return Campaign::manufacture(Client::send('GET', 'rest/v1/campaigns.json', ['query'=>$query]));
     }
 
     /**
@@ -73,7 +73,7 @@ class Campaign extends Model {
      * @return Campaign[] | null
      */
     public static function getCampaignById($campaign_id) {
-        return Campaign::manufacture(Client::send('GET', 'campaigns/' . $campaign_id . '.json'));
+        return Campaign::manufacture(Client::send('GET', 'rest/v1/campaigns/' . $campaign_id . '.json'));
     }
 
     /**
@@ -88,7 +88,7 @@ class Campaign extends Model {
      * @return Campaign[] | null
      */
     public static function scheduleCampaign($campaign_id, $schedule_campaign_data) {
-        return Campaign::manufacture(Client::send('POST', 'campaigns/' . $campaign_id . '/schedule.json', 
+        return Campaign::manufacture(Client::send('POST', 'rest/v1/campaigns/' . $campaign_id . '/schedule.json', 
             ['body'=>['input'=>$schedule_campaign_data]]));
     }
 
@@ -104,7 +104,7 @@ class Campaign extends Model {
      * @return Campaign[] | null
      */
     public static function requestCampaign($campaign_id, $trigger_campaign_data) {
-        return Campaign::manufacture(Client::send('POST', 'campaigns/'. $campaign_id . '/trigger.json', 
+        return Campaign::manufacture(Client::send('POST', 'rest/v1/campaigns/'. $campaign_id . '/trigger.json', 
             ['body'=>['input'=>$trigger_campaign_data]]));
     }
 }
