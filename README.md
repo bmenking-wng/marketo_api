@@ -11,10 +11,16 @@ Wrapper for Marketo API
 
 This version has classes built for the following controllers:
 - Activities
+- BulkExportLead
 - Campaigns
+- CustomObjects (partial)
 - Leads
 - Opportunities
+- ProgramMembers
+- SalesPersons
+- SmartCampaigns
 - StaticLists
+- SmartList (partial)
 - Usage
 
 ## Installation
@@ -27,13 +33,13 @@ Modify your composer.json by adding the following section (if it doesn't already
 ...
     "require": {
         ...
-        "worldnewsgroup/marketo_api": "dev:master",
+        "worldnewsgroup/marketo-api": "~0.1",
         ...
     },
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/bmenking-wng/marketo_api.git"
+            "url": "https://github.com/bmenking-wng/marketo_api"
         }
     ],
 ...
@@ -57,7 +63,7 @@ $result = Lead::getLeadById($leadId);
 
 $lead = $result->leads();
 
-echo "Hello, {$lead->getFirstName()}\n";
+echo "Hello, {$lead[0]->firstName}\n";
 
 ```
 
