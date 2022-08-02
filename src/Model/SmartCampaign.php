@@ -56,10 +56,10 @@ class SmartCampaign extends Model {
      * 
      * @param   int     $smartcampaign_id       Id for the smart campaign.
      * 
-     * @return SmartList[] | null     * 
+     * @return SmartCampaign[] | null     * 
      */
     public static function getSmartCampaignById(int $smartcampaign_id) {
-        return SmartList::manufacture(Client::send('GET', 'rest/asset/v1/smartCampaign/' . $smartcampaign_id . '.json'));
+        return SmartCampaign::manufacture(Client::send('GET', 'rest/asset/v1/smartCampaign/' . $smartcampaign_id . '.json'));
     }
 
     /**
@@ -70,7 +70,7 @@ class SmartCampaign extends Model {
      * @param   string  $name                   Name of the smart campaign.
      * @param   string  $description            Description of the smart campaign.
      * 
-     * @return SmartList[] | null     * 
+     * @return SmartCampaign[] | null     * 
      */
     public static function updateSmartCampaign(int $smartcampaign_id, string $name = null, string $description = null) {
         $body = [];
@@ -78,7 +78,7 @@ class SmartCampaign extends Model {
         if( !is_null($name) ) $body['name'] = $name;
         if( !is_null($description) ) $body['description'] = $description;
 
-        return SmartList::manufacture(Client::send('POST', 'rest/asset/v1/smartCampaign/' . $smartcampaign_id . '.json', ['body'=>$body]));
+        return SmartCampaign::manufacture(Client::send('POST', 'rest/asset/v1/smartCampaign/' . $smartcampaign_id . '.json', ['body'=>$body]));
     }
 
     /**
@@ -87,12 +87,12 @@ class SmartCampaign extends Model {
      * 
      * @param   string     $smartcampaign_name       Name for the smart campaign.
      * 
-     * @return SmartList[] | null     * 
+     * @return SmartCampaign[] | null     * 
      */
     public static function getSmartCampaignByName(string $smartcampaign_name) {
         $query = ['name'=>$smartcampaign_name];
 
-        return SmartList::manufacture(Client::send('GET', 'rest/asset/v1/smartCampaign/byName.json', ['query'=>$query]));
+        return SmartCampaign::manufacture(Client::send('GET', 'rest/asset/v1/smartCampaign/byName.json', ['query'=>$query]));
     }
 
     /**
@@ -121,9 +121,19 @@ class SmartCampaign extends Model {
      * @param   string  $latest_updated_at      Exclude smart campaigns after this date. Must be valid ISO-8601 string. See Datetime field type description.
      * @param   boolean $is_active              Set true to return only active campaigns. Default false
      * 
-     * @return SmartList[] | null     * 
+     * @return SmartCampaign[] | null     * 
      */
     public static function getSmartCampaigns(int $max_return = 20, int $offset = 0, string $folder = null, string $earliest_updated_at = null, string $latest_updated_at = null, $is_active = false) {
-        return SmartList::manufacture(Client::send('GET', 'rest/asset/v1/smartCampaigns.json', ['query'=>$query]));
+        $query = [
+            'maxReturn'=>$max_return,
+            'offset'=>$offset,
+            'isActive'=>$is_active
+        ];
+
+        if( !is_null($folder) ) $query['folder'] = $folder;
+        if( !is_null($earliest_updated_at) ) $query['earliestUpdatedAt'] = $earliest_updated_at;
+        if( !is_null($latest_updated_at) ) $query['latestUpdatedAt'] = $latest_updated_at;
+
+        return SmartCampaign::manufacture(Client::send('GET', 'rest/asset/v1/smartCampaigns.json', ['query'=>$query]));
     }
 }
