@@ -60,22 +60,22 @@ class BulkExportLead extends Model {
      * Get Export Lead Job Status endpoint to retrieve status of export job. 
      * Required Permissions: Read-Only Lead
      * 
-     * @param   array       $column_header_names    File header field names override (corresponds with REST API name)
-     * @param   array       $fields                 An array of fields to include in the file.
      * @param   array       $filter                 Lead record selection criteria. Can be one of the following: "createdAt", "updatedAt", 
      *                                              "staticListName", "staticListId", "smartListName", "smartListId"
-     * @param   string       $format                 File format to create("CSV", "TSV", "SSV"). Default is "CSV"
+     * @param   array       $column_header_names    File header field names override (corresponds with REST API name)
+     * @param   array       $fields                 An array of fields to include in the file.
+     * @param   string      $format                 File format to create("CSV", "TSV", "SSV"). Default is "CSV"
      * 
      * @return Export[] | null
      */
-    public static function createExportLeadJob($column_header_names = [], $fields = [], $filter = [], $format = "CSV") {
+    public static function createExportLeadJob($filter, $column_header_names = [], $fields = [], $format = "CSV") {
         $body = [
+            'filter'=>$filter,
             'format'=>$format
         ];
 
         if( !empty($column_header_names) ) $body['columnHeaderNames'] = $column_header_names;
         if( !empty($fields) ) $body['fields'] = $fields;
-        if( !empty($filter) ) $body['filter'] = $filter;
 
         return Export::manufacture(Client::send('POST', 'bulk/v1/leads/export/create.json', ['body'=>$body]));
     }

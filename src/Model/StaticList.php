@@ -12,7 +12,8 @@ class StaticList extends Model {
         'updatedAt',
         'workspaceId',
         'workspaceName',
-        'name'
+        'name',
+        'leadId'
     ];
 
     /**
