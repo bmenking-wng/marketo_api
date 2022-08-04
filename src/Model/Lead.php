@@ -70,10 +70,11 @@ class Lead extends Model {
         $query = [
             'filterType'=>$filter_type,
             'filterValues'=>implode(',', $filter_values),
-            'fields'=>implode(',', $fields),
-            'batchSize'=>$batch_size,
-            'nextPageToken'=>$next_page_token
+            'batchSize'=>$batch_size
         ];
+
+        if( !empty($fields) ) $query['fields'] = implode(',', $fields);
+        if( !is_null($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
         return Lead::manufacture(Client::send('GET', "rest/v1/leads.json", ['query'=>$query]));
     }
