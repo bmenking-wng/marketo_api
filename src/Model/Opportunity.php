@@ -47,7 +47,7 @@ class Opportunity extends Model {
      * 
      * @return LeadField[] | null
      */
-    public static function getOpportunityFieldByName($field_api_name) {
+    public static function getOpportunityFieldByName(String $field_api_name) {
         return LeadField::manufacture(Client::send('GET', 'rest/v1/opportunities/schema/fields/' . $field_api_name . '.json'));
     }
 
@@ -60,7 +60,7 @@ class Opportunity extends Model {
      * 
      * @return LeadField[] | null
      */
-    public static function getOpportunityFields($batch_size = 300, $next_page_token = null) {
+    public static function getOpportunityFields(int $batch_size = 300, String $next_page_token = null) {
         if( $batch_size > 300 ) {
             throw new \Exception('Batch size cannot exceed 300');
         }
@@ -81,26 +81,24 @@ class Opportunity extends Model {
      * Required Permissions: Read-Only Opportunity, Read-Write Named Opportunity
      * 
      * @param   string      $filter_type
-     * @param   array       $input
+     * @param   array       $filter_values
      * @param   string[]    $fields
      * @param   int         $batch_size
      * @param   string      $next_page_token
      * 
      * @return CustomObject[] | null
      */
-    public static function getOpportunities($filter_type, $input, $fields = [], $batch_size = 300, $next_page_token = null) {
-        $lookupObject = [
+    public static function getOpportunities(String $filter_type, array $filter_values, array $fields = [], int $batch_size = 300, String $next_page_token = null) {
+        $query = [
             'batchSize'=>$batch_size,
-            'fields'=>$fields,
             'filterType'=>$filter_type,
-            'input'=>$input
+            'filterValues'=>implode(',', $filter_values)
         ];
 
-        if( !is_null($next_page_token) ) {
-            $lookupObject['nextPageToken'] = $next_page_token;
-        }
+        if( !empty($fields) ) $query['fields'] = implode(',', $fields);
+        if( !is_null($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
-        return CustomObject::manufacture(Client::send('GET', 'rest/v1/opportunities.json', ['body'=>$lookupObject]));
+        return CustomObject::manufacture(Client::send('GET', 'rest/v1/opportunities.json', ['query'=>$query]));
     }
 
     /**
@@ -113,7 +111,7 @@ class Opportunity extends Model {
      * 
      * @return CustomObject[] | null
      */
-    public static function syncOpportunities($custom_objects, $action = 'createOrUpdate', $dedupe_by = 'email') {
+    public static function syncOpportunities(array $custom_objects, String $action = 'createOrUpdate', String $dedupe_by = 'dedupeFields') {
         $body = [
             'input'=>$custom_objects,
             'action'=>$action,
@@ -133,7 +131,7 @@ class Opportunity extends Model {
      * 
      * @return CustomObject[] | null
      */
-    public static function deleteOpportunities($ids, $delete_by = null) {
+    public static function deleteOpportunities(Array $ids, String $delete_by = null) {
         $body = [
             'input'=>$ids
         ];
@@ -159,9 +157,15 @@ class Opportunity extends Model {
      * Returns a list of opportunity roles based on a filter and set of values. 
      * Required Permissions: Read-Only Opportunity, Read-Write Named Opportunity
      * 
+     * @param   string      $filter_type        The role field to filter on. Searchable fields can be retrieved with the Describe Opportunity call.
+     * @param   array       $filter_values      An array of field values to return records for.
+     * @param   array       $fields             An array of fields to include in the response.
+     * @param   int         $batch_size         Maximum number of records to return in the response. Max and default is 300.
+     * @param   string      $next_page_token    Paging token returned from a previous response.
+     * 
      * @return CustomObject[] | null
      */
-    public static function getOpportunityRoles($lookup_request, $filter_type, $filter_values, $fields = null, $batch_size = 300, $next_page_token = null) {
+    public static function getOpportunityRoles(String $filter_type, Array $filter_values, Array $fields = null, int $batch_size = 300, String $next_page_token = null) {
         if( $batch_size > 300 ) {
             throw new \Exception('Batch size cannot exceed 300');
         }
@@ -169,18 +173,16 @@ class Opportunity extends Model {
         $body = [
             'batchSize'=>$batch_size,
             'filterType'=>$filter_type,
-            'filterValues'=>$filter_values
+            'filterValues'=>implode(',', $filter_values)
         ];
 
-        if( !is_null($fields) ) {
-            $body['fields'] = $fields;
-        }
+        if( !is_null($fields) ) $body['fields'] = implode(',', $fields);
+        if( !is_null($next_page_token) ) $body['nextPageToken'] = $next_page_token;
 
-        if( !is_null($next_page_token) ) {
-            $body['nextPageToken'] = $next_page_token;
-        }
+        // this is for the compound keys, but couldn't get it to work reliably
+        //return CustomObject::manufacture(Client::send('POST', 'rest/v1/opportunities/roles.json', ['query'=>['_method'=>'GET'], 'body'=>$body]));
 
-        return CustomObject::manufacture(Client::send('GET', 'rest/v1/opportunities/roles.json', ['body'=>$body]));
+        return CustomObject::manufacture(Client::send('GET', 'rest/v1/opportunities/roles.json', ['query'=>$body]));
     }
 
     /**
@@ -193,7 +195,7 @@ class Opportunity extends Model {
      * 
      * @return CustomObject[] | null
      */
-    public static function syncOpportunityRoles($custom_objects, $action = 'createOrUpdate', $dedupe_by = 'email') {
+    public static function syncOpportunityRoles(Array $custom_objects, String $action = 'createOrUpdate', String $dedupe_by = 'dedupeFields') {
         $body = [
             'input'=>$custom_objects,
             'action'=>$action,
@@ -212,7 +214,7 @@ class Opportunity extends Model {
      * 
      * @return CustomObject[] | null
      */
-    public static function deleteOpportunityRoles($input, $delete_by = null) {
+    public static function deleteOpportunityRoles(Array $input, String $delete_by = null) {
         $body = [
             'input'=>$input
         ];

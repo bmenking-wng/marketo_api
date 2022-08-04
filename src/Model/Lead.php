@@ -13,7 +13,9 @@ class Lead extends Model {
         'email',
         'updatedAt',
         'createdAt',
-        'status'
+        'status',
+        'membership',
+        'reason'
     ];
 
     /**
@@ -67,8 +69,8 @@ class Lead extends Model {
 
         $query = [
             'filterType'=>$filter_type,
-            'filterValues'=>$filter_values,
-            'fields'=>$fields,
+            'filterValues'=>implode(',', $filter_values),
+            'fields'=>implode(',', $fields),
             'batchSize'=>$batch_size,
             'nextPageToken'=>$next_page_token
         ];

@@ -1,5 +1,7 @@
 .env
 vendor/
 docs/
+build/
+phpdoc.xml
 .phpdoc/
 test.php
