@@ -34,4 +34,16 @@ class Program extends Model {
         
         return $objects;
     }  
+
+    /**
+     * Retrieves the program record for the given id. 
+     * Required Permissions: Read-Only Assets, Read-Write Assets
+     * 
+     * @param   int     $program_id     id.
+     * 
+     * @return Program[] | null
+     */
+    public static function getProgramById($program_id) {
+        return Program::manufacture(Client::send('GET', 'rest/asset/v1/program/' . $program_id . '.json'));
+    }
 }

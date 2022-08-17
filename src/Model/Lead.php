@@ -245,8 +245,8 @@ class Lead extends Model {
             'batchSize'=>$batch_size
         ];
 
-        if( !empty($fields) ) $body['fields'] = $fields;
-        if( !empty($next_page_token) ) $body['nextPageToken'] = $next_page_token;
+        if( !empty($fields) ) $query['fields'] = $fields;
+        if( !empty($next_page_token) ) $query['nextPageToken'] = $next_page_token;
 
         return Lead::manufacture(Client::send('GET', 'rest/v1/leads/programs/' . $program_id . '.json', ['query'=>$query]));
     }

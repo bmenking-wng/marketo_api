@@ -28,7 +28,7 @@ class Client {
         if( isset($params['query']) ) {
             foreach($params['query'] as $key=>$vals ) {
                 if( is_array($vals) ) {
-                    $query[$key] = \http_build_query($vals);
+                    $query[$key] = implode(',', $vals);
                 }
                 else {
                     $query[$key] = $vals;
