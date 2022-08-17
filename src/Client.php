@@ -11,9 +11,9 @@ class Client {
      * @param   mixed[]    $params
      * @param   String[]   $headers
      * 
-     * @return Result | ErrorException | null
+     * @return Result | ErrorException | bool | string | null
      */
-    public static function send(String $method, String $path, $params = [], Environment $env = null, $headers = []) {
+    public static function send(String $method, String $path, $params = [], Environment $env = null, $headers = [], $return_raw = false) {
         if( is_null($env) ) {
             $env = Environment::currentEnvironment();
         }
@@ -54,6 +54,10 @@ class Client {
 
         $rawResponse = curl_exec($ch);
         curl_close($ch);
+
+        if( $return_raw ) {
+            return $rawResponse;
+        }
 
         $json = json_decode($rawResponse, true);
 
