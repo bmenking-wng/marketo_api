@@ -72,12 +72,12 @@ class CustomObject extends Model {
      * 
      * @return CustomObject[] | null
      */
-    public static function getCustomObjects($input, $fields = [], $filter_type = null, $batch_size = 300, $next_page_token = null) {
+    public static function getCustomObjects($custom_object_name, $fields = [], $filter_type = null, $batch_size = 300, $next_page_token = null) {
         return null;
         
         $body = [
             'batchSize'=>$batch_size,
-            'input'=>$input
+            'input'=>$custom_object_name
         ];
 
         if( !is_null($next_page_token) ) $body['nextPageToken'] = $next_page_token;
