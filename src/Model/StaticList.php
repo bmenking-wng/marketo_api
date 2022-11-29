@@ -121,7 +121,13 @@ class StaticList extends Model {
      */
     public static function addToList($list_id, $ids = []) {
         // TODO: need an object for the ListOperationOutputData returned by this call
-        return Client::send('POST', 'rest/v1/lists/' . $list_id . '/leads.json', ['query'=>['input'=>$ids]]);
+        $body = ['input'=>[]];
+
+        foreach($ids as $id) {
+            $body['input'][] = ['id'=>$id];
+        }
+
+        return Client::send('POST', 'rest/v1/lists/' . $list_id . '/leads.json', ['body'=>$body]);
     }
 
     /**

@@ -70,6 +70,8 @@ class Result {
      * @return mixed[]
      */
     public function getResults() {
+        if( !isset($this->response['result']) ) return [];
+        
         return $this->response['result'];
     }
 }

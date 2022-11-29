@@ -49,6 +49,10 @@ class Client {
             $headers[] = "Content-Type: application/json";
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params['body']));
         }
+        else if( isset($params['form-encode']) && count($params['form-encode']) > 0 && $method == 'POST' ) {
+            $headers[] = "Content-Type: application/x-www-form-urlencoded";
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params['form-encode']));  
+        }
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
