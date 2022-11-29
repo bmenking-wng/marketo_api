@@ -107,7 +107,13 @@ class StaticList extends Model {
      */
     public static function removeFromList($list_id, $ids = []) {
         // TODO: need an object for the ListOperationOutputData returned by this call
-        return Client::send('DELETE', 'rest/v1/lists/' . $list_id . '/leads.json', ['query'=>['input'=>$ids]]);
+        $body = ['input'=>[]];
+
+        foreach($ids as $id) {
+            $body['input'][] = ['id'=>$id];
+        }
+
+        return Client::send('DELETE', 'rest/v1/lists/' . $list_id . '/leads.json', ['body'=>$body]);
     }
 
     /**

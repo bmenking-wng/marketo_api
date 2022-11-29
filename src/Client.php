@@ -45,11 +45,11 @@ class Client {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
-        if( isset($params['body']) && count($params['body']) > 0 && $method == 'POST') {
+        if( isset($params['body']) && count($params['body']) > 0 && in_array($method, ['POST', 'DELETE'])) {
             $headers[] = "Content-Type: application/json";
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params['body']));
         }
-        else if( isset($params['form-encode']) && count($params['form-encode']) > 0 && $method == 'POST' ) {
+        else if( isset($params['form-encode']) && count($params['form-encode']) > 0 && in_array($method, ['POST', 'DELETE']) ) {
             $headers[] = "Content-Type: application/x-www-form-urlencoded";
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params['form-encode']));  
         }
