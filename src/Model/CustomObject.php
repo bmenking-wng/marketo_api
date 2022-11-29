@@ -72,9 +72,7 @@ class CustomObject extends Model {
      * 
      * @return CustomObject[] | null
      */
-    public static function getCustomObjects($custom_object_name, $fields = [], $filter_type = null, $batch_size = 300, $next_page_token = null) {
-        return null;
-        
+    public static function getCustomObjects($custom_object_name, $fields = [], $filter_type = null, $batch_size = 300, $next_page_token = null) {      
         $body = [
             'batchSize'=>$batch_size,
             'input'=>$custom_object_name
@@ -84,7 +82,7 @@ class CustomObject extends Model {
         if( !empty($fields) ) $body['fields'] = $fields;
         if( !is_null($filter_type) ) $body['filterType'] = $filter_type;
 
-        return CustomObject::manufacture(Client::send('GET', 'rest/v1/customobjects/' . $custom_object_name . '.json', $query));
+        return CustomObject::manufacture(Client::send('GET', 'rest/v1/customobjects/' . $custom_object_name . '.json', $body));
     }
 
     /**
@@ -107,4 +105,18 @@ class CustomObject extends Model {
         
         return ObjectMetaData::manufacture(Client::send('GET', 'rest/v1/customobjects/schema.json', ['query'=>$query]));
     }
+
+    /**
+     * 
+     */
+    public static function syncCustomObjects($custom_object_name, $records = [], $action = 'createOrUpdate', $dedupe_by = null) {
+        $body = [
+            'action'=>$action,
+            'input'=>$records
+        ];
+
+        if( !is_null($dedupe_by) ) $body['dedupeBy'] = $dedupe_by;
+
+        return CustomObject::manufacture(Client::send('POST', 'rest/v1/customobjects/' . $custom_object_name . '.json', $body));
+    }    
 }
