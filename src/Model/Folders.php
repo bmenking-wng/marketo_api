@@ -49,7 +49,7 @@ class Folders extends Model {
         if( !is_null($root) ) $query['root'] = $root;
         if( !is_null($workSpace) ) $query['workSpace'] = $workSpace;
 
-        return Client::send('GET', 'rest/asset/v1/folder/byName.json', ['query'=>$query]);
+        return Folders::manufacture(Client::send('GET', 'rest/asset/v1/folder/byName.json', ['query'=>$query]));
     }
 
     public static function getFolderById($id, $type = 'Folder') {
@@ -57,7 +57,7 @@ class Folders extends Model {
             'type'=>$type
         ];
 
-        return Client::send('GET', 'rest/asset/v1/folder/' . $id . '.json', ['query'=>$query]);
+        return Folders::manufacture(Client::send('GET', 'rest/asset/v1/folder/' . $id . '.json', ['query'=>$query]));
     }
 
     public static function updateFolderMetadata($id, $type, $name = null, $isArchive = null, $description = null) {
@@ -97,7 +97,7 @@ class Folders extends Model {
         if( !is_null($root) ) $query['root'] = $root;
         if( !is_null($workSpace) ) $query['workSpace'] = $workSpace;
 
-        return Client::send('GET', 'rest/asset/v1/folders.json', ['query'=>$query]);
+        return Folders::manufacture(Client::send('GET', 'rest/asset/v1/folders.json', ['query'=>$query]));
     }
 
     public static function createFolder($name, $parent = null, $description = null) {
